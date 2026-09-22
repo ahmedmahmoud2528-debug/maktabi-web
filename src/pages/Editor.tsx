@@ -40,7 +40,7 @@ export default function Editor() {
 
   useLayoutEffect(() => {
     const el = wrap.current; if (!el) return
-    const ro = new ResizeObserver(() => { const r = el.getBoundingClientRect(); setFit(Math.max(.25, Math.min((r.width - 150) / PLAN.w, (r.height - 200) / PLAN.h, 1.2))) })
+    const ro = new ResizeObserver(() => { const r = el.getBoundingClientRect(); setFit(Math.max(.25, Math.min((r.width - 56) / PLAN.w, (r.height - 200) / PLAN.h, 1.2))) })
     ro.observe(el); return () => ro.disconnect()
   }, [])
   const px = (v: number) => v * fit

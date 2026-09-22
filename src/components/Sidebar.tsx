@@ -79,16 +79,16 @@ function DM({ person, onBack, onLocate }: { person: Person; onBack: () => void; 
       </div>
       <div className="dm-body">{msgs.map((m, i) => <div className={`bubble ${m.me ? 'me' : ''}`} key={i}>{m.t}</div>)}</div>
       <form className="composer" onSubmit={e => { e.preventDefault(); send(text) }}>
-        <button type="submit" className="round send" aria-label="إرسال"><I.Send size={18} /></button>
-        <div className="pill">
-          <button type="button" className="gif" onClick={() => toast('GIF', 'مكتبة الصور المتحركة ستُضاف لاحقًا.')}>GIF</button>
-          <button type="button" onClick={() => setEmoji(v => !v)} aria-label="إيموجي" style={{ color: 'var(--text-2)', display: 'grid' }}><I.Emoji size={18} /></button>
-          <input placeholder="اكتب رسالة…" value={text} onChange={e => setText(e.target.value)} />
-        </div>
         <button type="button" className="round attach" aria-label="إرفاق" onClick={() => toast('إرفاق ملف', 'المرفقات ستُضاف لاحقًا.')}><I.Plus size={18} /></button>
+        <div className="pill">
+          <input placeholder="اكتب رسالة…" value={text} onChange={e => setText(e.target.value)} />
+          <button type="button" onClick={() => setEmoji(v => !v)} aria-label="إيموجي" style={{ color: 'var(--text-2)', display: 'grid' }}><I.Emoji size={18} /></button>
+          <button type="button" className="gif" onClick={() => toast('GIF', 'مكتبة الصور المتحركة ستُضاف لاحقًا.')}>GIF</button>
+        </div>
+        <button type="submit" className="round send" aria-label="إرسال"><I.Send size={18} /></button>
       </form>
       {emoji && (
-        <div className="popover emoji-pop" style={{ right: 'auto', left: -232 }}>
+        <div className="popover emoji-pop">
           <div className="t">تفاعل سريع</div>
           <div className="emoji-grid">{EMOJIS.map(e => <button key={e} onClick={() => send(e)}>{e}</button>)}</div>
         </div>

@@ -48,11 +48,8 @@ export function Panel({ title, sub, icon, actions, children, className = '' }: {
     <section className={`card panel card-in ${className}`}>
       {(title || actions) && (
         <div className="panel-head">
-          <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-            {icon && <span className="ic">{icon}</span>}
-            <div><h3>{title}</h3>{sub && <p>{sub}</p>}</div>
-          </div>
-          {actions}
+          <div><h3>{title}</h3>{sub && <p>{sub}</p>}</div>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>{actions}{icon && <span className="ic">{icon}</span>}</div>
         </div>
       )}
       {children}
@@ -61,7 +58,7 @@ export function Panel({ title, sub, icon, actions, children, className = '' }: {
 }
 
 export function Stat({ icon, n, unit, t }: { icon: ReactNode; n: string; unit?: string; t: string }) {
-  return <div className="card stat card-in"><span className="ic">{icon}</span><div><div className="n">{n}{unit && <small>{unit}</small>}</div><div className="t">{t}</div></div></div>
+  return <div className="card stat card-in"><div style={{ flex: 1 }}><div className="n">{n}{unit && <small>{unit}</small>}</div><div className="t">{t}</div></div><span className="ic">{icon}</span></div>
 }
 
 export function Switch({ on, onChange }: { on: boolean; onChange: (v: boolean) => void }) {

@@ -87,7 +87,7 @@ export default function Profile() {
 
       {tab === TABS[2] && <Panel title="تغيير كلمة المرور" sub="خمس خطوات: كلمة مرور جديدة ثم التحقق" icon={<I.Status size={16} />}>
         <div className="steps" style={{ maxWidth: 520, marginBottom: 16 }}>
-          {['كلمة المرور الجديدة', 'التحقق', 'تم'].map((s, i) => <span key={s} className={`step ${pwStep === i + 1 ? 'on' : pwStep > i + 1 ? 'done' : ''}`}>٠{i + 1} · {s}</span>)}
+          {['كلمة المرور الجديدة', 'التحقق', 'تم'].map((s, i) => <span key={s} className={`step ${pwStep === i + 1 ? 'on' : pwStep > i + 1 ? 'done' : ''}`}>{['٠١','٠٢','٠٣','٠٤'][i]} · {s}</span>)}
         </div>
         {pwStep === 1 && <div className="form" style={{ marginTop: 0, maxWidth: 420 }}>
           <div className="row"><label className="label">كلمة المرور الجديدة</label><div className="field"><input type="password" value={pw.a} onChange={e => setPw(p => ({ ...p, a: e.target.value }))} /></div></div>

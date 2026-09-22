@@ -31,7 +31,7 @@ export function CreateFloor() {
       </div>
       <div className="ws-body" style={{ maxWidth: 820 }}>
         <div className="steps" style={{ marginBottom: 20 }}>
-          {['المصدر', 'التفاصيل', 'المراجعة'].map((s, i) => <span key={s} className={`step ${step === i + 1 ? 'on' : step > i + 1 ? 'done' : ''}`}>٠{i + 1} · {s}</span>)}
+          {['المصدر', 'التفاصيل', 'المراجعة'].map((s, i) => <span key={s} className={`step ${step === i + 1 ? 'on' : step > i + 1 ? 'done' : ''}`}>{['٠١','٠٢','٠٣','٠٤'][i]} · {s}</span>)}
         </div>
 
         {step === 1 && <>

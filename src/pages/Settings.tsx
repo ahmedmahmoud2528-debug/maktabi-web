@@ -29,19 +29,19 @@ export default function Settings({ initial }: { initial?: string }) {
         <div className="grid g2">
           <Panel title="تفضيلات التطبيق" sub="اللغة، المظهر، أصوات التنبيه وحجم النص" icon={<I.Settings size={16} />}>
             <div className="card" style={{ padding: '0 14px' }}><div className="detail-row"><span>اللغة والواجهة</span><b>العربية · الوضع الفاتح</b></div></div>
-            <button className="btn btn-secondary btn-sm" style={{ marginTop: 14 }} onClick={() => setTab(TABS[1])}>إدارة التفضيلات</button>
+            <button className="btn btn-secondary btn-sm btn-left" style={{ marginTop: 14 }} onClick={() => setTab(TABS[1])}>إدارة التفضيلات</button>
           </Panel>
           <Panel title="الأمان" sub="الجلسات النشطة وإجراءات حماية الحساب" icon={<I.Status size={16} />}>
             <div className="card" style={{ padding: '0 14px' }}><div className="detail-row"><span>الجلسات</span><b>3 جلسات نشطة</b></div></div>
-            <button className="btn btn-secondary btn-sm" style={{ marginTop: 14 }} onClick={() => setTab(TABS[2])}>إدارة الأمان</button>
+            <button className="btn btn-secondary btn-sm btn-left" style={{ marginTop: 14 }} onClick={() => setTab(TABS[2])}>إدارة الأمان</button>
           </Panel>
           <Panel title="إعدادات مساحة العمل" sub="الاسم، الرابط المعرّف، الأسبوع الرسمي وبداية الدوام" icon={<I.Building size={16} />}>
             <div className="card" style={{ padding: '0 14px' }}><div className="detail-row"><span>المعرّف</span><b dir="ltr">{ws.slug}</b></div></div>
-            <button className="btn btn-secondary btn-sm" style={{ marginTop: 14 }} onClick={() => setTab(TABS[3])}>إدارة مساحة العمل</button>
+            <button className="btn btn-secondary btn-sm btn-left" style={{ marginTop: 14 }} onClick={() => setTab(TABS[3])}>إدارة مساحة العمل</button>
           </Panel>
           <Panel title="الدومين والانضمام" sub="سياسة انضمام المستخدمين المطابقين لدومين الشركة" icon={<I.Link size={16} />}>
             <div className="card" style={{ padding: '0 14px' }}><div className="detail-row"><span>الانضمام التلقائي</span><b className="pill green">مفعّل</b></div></div>
-            <button className="btn btn-secondary btn-sm" style={{ marginTop: 14 }} onClick={() => setTab(TABS[4])}>إدارة الدومين</button>
+            <button className="btn btn-secondary btn-sm btn-left" style={{ marginTop: 14 }} onClick={() => setTab(TABS[4])}>إدارة الدومين</button>
           </Panel>
         </div>
         <div style={{ height: 14 }} />

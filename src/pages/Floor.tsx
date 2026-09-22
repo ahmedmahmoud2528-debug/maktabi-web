@@ -34,7 +34,7 @@ export default function Floor() {
     const el = wrap.current; if (!el) return
     const ro = new ResizeObserver(() => {
       const r = el.getBoundingClientRect()
-      setFit(Math.max(0.25, Math.min((r.width - 132) / PLAN.w, (r.height - 136) / PLAN.h, 1.2)))
+      setFit(Math.max(0.25, Math.min((r.width - 56) / PLAN.w, (r.height - 136) / PLAN.h, 1.2)))
     })
     ro.observe(el); return () => ro.disconnect()
   }, [])

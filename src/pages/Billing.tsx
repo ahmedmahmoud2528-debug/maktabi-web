@@ -43,7 +43,7 @@ export default function Billing() {
               <div className="detail-row"><span>دورة الفوترة</span><b>شهري</b></div>
               <div className="detail-row"><span>قيمة التجديد</span><b>540 ر.س</b></div>
             </div>
-            <button className="btn btn-primary btn-sm" style={{ marginTop: 14, alignSelf: 'flex-start' }} onClick={() => setTab(TABS[1])}><I.ChevronR size={15} />إدارة الباقة</button>
+            <button className="btn btn-primary btn-sm btn-left" style={{ marginTop: 14 }} onClick={() => setTab(TABS[1])}><I.ChevronR size={15} />إدارة الباقة</button>
           </Panel>
           <Panel title="طريقة الدفع" icon={<I.Card size={16} />}>
             <div className="card" style={{ padding: 14, display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -51,7 +51,7 @@ export default function Billing() {
               <div style={{ flex: 1 }}><b dir="ltr">•••• 4242</b><div className="caption">تنتهي في 08/28</div></div>
               <span className="pill teal">أساسية</span>
             </div>
-            <button className="btn btn-secondary btn-sm" style={{ marginTop: 14 }} onClick={() => setTab(TABS[2])}>إدارة طرق الدفع</button>
+            <button className="btn btn-secondary btn-sm btn-left" style={{ marginTop: 14 }} onClick={() => setTab(TABS[2])}>إدارة طرق الدفع</button>
           </Panel>
         </div>
         <div style={{ height: 14 }} />
@@ -74,14 +74,14 @@ export default function Billing() {
               <div style={{ flex: 1 }}><b dir="ltr">{INVOICES[0].id}</b><div className="caption">{INVOICES[0].date} · {INVOICES[0].amount}</div></div>
               <span className="pill green">مدفوعة</span>
             </div>
-            <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+            <div style={{ display: 'flex', gap: 8, marginTop: 14, justifyContent: 'flex-end' }}>
               <button className="btn btn-secondary btn-sm" onClick={() => setInvoice(INVOICES[0])}>عرض التفاصيل</button>
               <button className="btn btn-ghost btn-sm" onClick={() => toast('تم تحميل الفاتورة', INVOICES[0].id)}>تحميل PDF</button>
             </div>
           </Panel>
           <Panel title="بيانات الفوترة" icon={<I.Building size={16} />}>
             <div className="card" style={{ padding: 14 }}><b>شركة قمرة السعادة لتقنية المعلومات</b><div className="caption" style={{ marginTop: 4 }}>الرياض · السعودية · الرقم الضريبي 3100•••••</div></div>
-            <button className="btn btn-secondary btn-sm" style={{ marginTop: 14 }} onClick={() => setTab(TABS[4])}>تعديل بيانات الفوترة</button>
+            <button className="btn btn-secondary btn-sm btn-left" style={{ marginTop: 14 }} onClick={() => setTab(TABS[4])}>تعديل بيانات الفوترة</button>
           </Panel>
         </div>
       </>}

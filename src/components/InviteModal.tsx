@@ -49,7 +49,7 @@ export function InviteModal() {
         ) : (
           <>
             <div className="steps" style={{ margin: '14px 0' }}>
-              {steps.map((s, i) => <span className={`step ${step === i + 1 ? 'on' : step > i + 1 ? 'done' : ''}`} key={s}>٠{i + 1} · {s}</span>)}
+              {steps.map((s, i) => <span className={`step ${step === i + 1 ? 'on' : step > i + 1 ? 'done' : ''}`} key={s}>{['٠١','٠٢','٠٣','٠٤'][i]} · {s}</span>)}
             </div>
             {status === 'error' && <div className="banner error" style={{ marginBottom: 12 }}><I.Info size={16} />{mode === 'email' ? 'تعذر إرسال الدعوة. تحقق من البيانات وحاول مرة أخرى.' : 'تعذر إنشاء الرابط. حاول مرة أخرى.'}</div>}
 
