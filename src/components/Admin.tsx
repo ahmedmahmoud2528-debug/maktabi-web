@@ -12,24 +12,35 @@ export function AdminLayout({ children }: { children: ReactNode }) {
     <div className="admin">
       <main className="admin-main"><div className="admin-inner page-fade">{children}</div></main>
       <nav className="admin-nav">
-        <img className="brand" src="./assets/logo.svg" alt="مكتبي" style={{ width: 108, filter: 'brightness(0) invert(1)' }} />
-        <button className="ws" onClick={() => nav('/workspaces')}><span className="tile"><I.Building size={15} /></span>مساحة عمل قمرة<I.Chevron size={14} className="chev" /></button>
-        <div style={{ height: 10 }} />
-        <NavLink to="/floor" className={link}><I.Apps size={17} />المكتب</NavLink>
-        <NavLink to="/admin/members" className={link}><I.People size={17} />الفريق</NavLink>
-        <div className="sec">عمل</div>
-        <NavLink to="/admin/recordings" className={link}><I.Cam size={17} />التسجيلات</NavLink>
-        <div className="sec">الإدارة</div>
-        <NavLink to="/admin/workspace" className={link}><I.Status size={17} />إدارة المساحة</NavLink>
-        <NavLink to="/admin/attendance" className={link}><I.Calendar size={17} />الحضور والانصراف</NavLink>
-        <NavLink to="/admin/billing" className={link}><I.Card size={17} />الفوترة والاشتراك</NavLink>
-        <NavLink to="/admin/settings" className={link}><I.Settings size={17} />الإعدادات</NavLink>
-        <button className="prof" onClick={() => nav('/admin/profile')}>
-          <span className="avatar sm teal">{user.initial}</span>
-          <span style={{ flex: 1 }}><b>{user.name}</b><span>{user.role}</span></span>
-          <I.ChevronR size={14} style={{ opacity: .5 }} />
+        <div className="brand"><img src="./assets/logo.svg" alt="مكتبي" style={{ width: 120, filter: 'brightness(0) invert(1)' }} /></div>
+        <button className="ws" onClick={() => nav('/workspaces')} title="تبديل مساحة العمل">
+          <span className="mark"><I.Building size={16} /></span>
+          <span className="nm">مساحة عمل قمرة</span>
+          <I.Chevron size={14} className="chev" />
         </button>
-        <button className="nav-item" style={{ marginTop: 4 }} onClick={() => { toast('تم تسجيل الخروج'); nav('/') }}><I.Logout size={16} />تسجيل الخروج</button>
+        <div className="nav-group" style={{ paddingTop: 10 }}>
+          <NavLink to="/floor" className={link}>المكتب<I.Apps size={20} /></NavLink>
+          <NavLink to="/admin/members" className={link}>الفريق<I.People size={20} /></NavLink>
+        </div>
+        <div className="sec">عملي</div>
+        <div className="nav-group">
+          <NavLink to="/admin/recordings" className={link}>التسجيلات<I.Cam size={20} /></NavLink>
+        </div>
+        <div className="divider-dark" />
+        <div className="sec">الإدارة</div>
+        <div className="nav-group">
+          <NavLink to="/admin/workspace" className={link}>إدارة المساحة<I.Status size={20} /></NavLink>
+          <NavLink to="/admin/attendance" className={link}>الحضور والانصراف<I.Calendar size={20} /></NavLink>
+          <NavLink to="/admin/billing" className={link}>الفوترة والاشتراك<I.Card size={20} /></NavLink>
+          <NavLink to="/admin/settings" className={link}>الإعدادات<I.Settings size={20} /></NavLink>
+        </div>
+        <div className="divider-dark" style={{ marginTop: 14 }} />
+        <button className="prof" onClick={() => nav('/admin/profile')}>
+          <span className="avatar teal" style={{ width: 38, height: 38, fontSize: 14 }}>{user.initial}</span>
+          <span className="t"><b>{user.name}</b><span>{user.role}</span></span>
+          <I.ChevronL size={14} className="chev" />
+        </button>
+        <button className="logout" onClick={() => { toast('تم تسجيل الخروج'); nav('/') }}>تسجيل الخروج<I.Logout size={18} /></button>
       </nav>
     </div>
   )

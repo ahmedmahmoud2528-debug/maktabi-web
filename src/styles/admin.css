@@ -27,21 +27,42 @@
 .switch i { position: absolute; top: 3px; inset-inline-start: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform var(--t) var(--ease); box-shadow: 0 1px 3px rgba(0,0,0,.2); }
 .switch.on { background: var(--teal); }
 .switch.on i { transform: translateX(-20px); }
+/* ===== سايدبار الإدارة — مطابق لـ Mode=Admin في فيجما (264×1009) ===== */
+.admin-nav {
+  width: 264px; height: 100vh; overflow: auto; color: #fff;
+  background: linear-gradient(180deg, #123641 0%, #0a1b24 100%);
+  display: flex; flex-direction: column; gap: 4px; padding: 20px 14px 14px;
+}
+.admin-nav .brand { display: flex; justify-content: flex-start; padding-bottom: 14px; }
+.admin-nav .ws { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px; border-radius: 12px; transition: background var(--t) var(--ease); }
+.admin-nav .ws:hover { background: rgba(255,255,255,.06); }
+.admin-nav .ws .mark { width: 32px; height: 32px; border-radius: 50%; background: var(--teal); display: grid; place-items: center; flex: 0 0 auto; color: #fff; }
+.admin-nav .ws .nm { font-size: 13px; font-weight: 600; }
+.admin-nav .ws .chev { margin-inline-start: auto; opacity: .75; }
+.admin-nav .nav-group { display: flex; flex-direction: column; gap: 2px; }
+.admin-nav a {
+  display: flex; align-items: center; justify-content: flex-start; gap: 10px;
+  height: 38px; padding: 0 12px; border-radius: 8px; font-size: 14px;
+  color: rgba(255,255,255,.78); transition: background var(--t) var(--ease), color var(--t) var(--ease);
+}
+.admin-nav a svg { order: -1; flex: 0 0 auto; opacity: .9; }
+.admin-nav a:hover { background: rgba(255,255,255,.05); color: #fff; }
+.admin-nav a.on { background: rgba(255,255,255,.08); color: #fff; font-weight: 600; }
+.admin-nav a.on svg { opacity: 1; color: var(--teal); }
+.admin-nav .sec { font-size: 11px; color: #64748b; padding: 14px 12px 4px; }
+.admin-nav .divider-dark { height: 1px; background: rgba(255,255,255,.14); margin-top: 14px; }
+.admin-nav .prof { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 10px; padding: 8px 10px; border-radius: 12px; background: rgba(255,255,255,.08); text-align: start; transition: background var(--t) var(--ease); }
+.admin-nav .prof:hover { background: rgba(255,255,255,.12); }
+.admin-nav .prof .t { flex: 1; }
+.admin-nav .prof b { display: block; font-size: 13px; }
+.admin-nav .prof span { font-size: 11px; color: rgba(255,255,255,.55); }
+.admin-nav .prof .chev { opacity: .5; }
+.admin-nav .logout { display: flex; align-items: center; justify-content: flex-start; gap: 10px; height: 38px; padding: 0 12px; margin-top: 6px; border-radius: 8px; font-size: 13.5px; color: rgba(255,255,255,.55); transition: background var(--t) var(--ease), color var(--t) var(--ease); }
+.admin-nav .logout svg { order: -1; }
+.admin-nav .logout:hover { background: rgba(255,255,255,.05); color: #fff; }
 
 /* ============ واجهة الإدارة ============ */
 .admin { display: grid; grid-template-columns: 1fr 264px; height: 100vh; background: var(--page); }
-.admin-nav { background: linear-gradient(180deg, #0f1b2a, #12202f); color: #fff; display: flex; flex-direction: column; padding: 20px 14px 14px; gap: 2px; height: 100vh; overflow: auto; }
-.admin-nav .brand { display: block; margin: 0 4px 16px; }
-.admin-nav .ws { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 12px; background: rgba(255,255,255,.05); font-size: 13px; font-weight: 600; width: 100%; }
-.admin-nav .ws .tile { width: 26px; height: 26px; border-radius: 8px; background: var(--teal); display: grid; place-items: center; }
-.admin-nav .ws .chev { margin-inline-start: auto; opacity: .6; }
-.admin-nav .sec { font-size: 10.5px; color: rgba(255,255,255,.4); margin: 14px 8px 4px; }
-.admin-nav a, .admin-nav .nav-item { display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 10px; border-radius: 10px; font-size: 13px; color: rgba(255,255,255,.72); transition: background var(--t) var(--ease), color var(--t) var(--ease); }
-.admin-nav a:hover, .admin-nav .nav-item:hover { background: rgba(255,255,255,.07); color: #fff; }
-.admin-nav a.on { background: rgba(255,255,255,.12); color: #fff; font-weight: 600; }
-.admin-nav .prof { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 14px; background: rgba(255,255,255,.06); width: 100%; text-align: start; }
-.admin-nav .prof b { display: block; font-size: 12.5px; }
-.admin-nav .prof span { font-size: 10.5px; color: rgba(255,255,255,.55); }
 .admin-main { overflow: auto; height: 100vh; }
 .admin-inner { padding: 22px 24px 60px; max-width: 1180px; }
 .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
@@ -111,3 +132,8 @@ table.tbl tbody tr:hover { background: #fbfdff; }
 /* زر في أسفل الكارت — لليسار مثل فيجما */
 .btn-left { display: flex; width: fit-content; margin-inline-start: auto; }
 .plan-now { background: linear-gradient(160deg, #eefbf8 0%, #ffffff 55%); border-color: var(--teal-100); }
+
+/* إخفاء شريط التمرير في أشرطة التبويبات */
+.tabbar { scrollbar-width: none; }
+.tabbar::-webkit-scrollbar { display: none; }
+.admin-nav { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.18) transparent; }
