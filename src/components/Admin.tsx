@@ -94,7 +94,7 @@ export function Filter({ label, items, value, onPick, width = 150 }: { label: st
       <button className="btn btn-secondary btn-sm" style={{ width, justifyContent: 'space-between' }} onClick={() => setOpen(o => !o)}>
         <span style={{ color: value === items[0] ? 'var(--text-2)' : 'var(--text)' }}>{label}: {value}</span><I.Chevron size={14} />
       </button>
-      {open && <div className="popover menu" style={{ top: 42, insetInlineStart: 0, minWidth: width }}>
+      {open && <div className="popover menu" style={{ top: 42, insetInlineStart: 0, minWidth: width, zIndex: 60 }}>
         {items.map(it => <button key={it} className="menu-item" onClick={() => { onPick(it); setOpen(false) }}>{it}{value === it && <I.Check size={14} style={{ marginInlineStart: 'auto', color: 'var(--teal)' }} />}</button>)}
       </div>}
     </div>
@@ -104,16 +104,24 @@ export function Filter({ label, items, value, onPick, width = 150 }: { label: st
 /* ---------- row action menu ---------- */
 export function RowMenu({ items }: { items: { label: string; danger?: boolean; onClick: () => void }[] }) {
   const [open, setOpen] = useState(false)
+  const [up, setUp] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!open) return
     const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false) }
-    document.addEventListener('mousedown', h); return () => document.removeEventListener('mousedown', h)
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('mousedown', h); document.addEventListener('keydown', esc)
+    return () => { document.removeEventListener('mousedown', h); document.removeEventListener('keydown', esc) }
   }, [open])
+  const toggle = () => {
+    const r = ref.current?.getBoundingClientRect()
+    if (r) setUp(r.bottom + items.length * 42 + 30 > window.innerHeight)
+    setOpen(o => !o)
+  }
   return (
-    <div className="rowmenu" ref={ref}>
-      <button className="btn btn-ghost btn-icon" onClick={() => setOpen(o => !o)} aria-label="إجراءات"><I.More size={18} /></button>
-      {open && <div className="popover menu" style={{ top: 38, insetInlineEnd: 0, minWidth: 190, zIndex: 20 }}>
+    <div className={`rowmenu ${open ? 'open' : ''}`} ref={ref}>
+      <button className={`btn btn-ghost btn-icon ${open ? 'is-open' : ''}`} onClick={toggle} aria-label="إجراءات" aria-expanded={open}><I.More size={18} /></button>
+      {open && <div className="popover menu" style={{ [up ? 'bottom' : 'top']: 40, insetInlineEnd: 0, minWidth: 196 }}>
         {items.map(it => <button key={it.label} className={`menu-item ${it.danger ? 'danger' : ''}`} onClick={() => { it.onClick(); setOpen(false) }}>{it.label}</button>)}
       </div>}
     </div>

@@ -14,8 +14,8 @@
 .scrim { animation: scrim-in 140ms var(--ease) both; }
 .modal { animation: pop-in 200ms var(--ease) both; }
 .popover { animation: pop-in 140ms var(--ease) both; transform-origin: top center; }
-.card-in { animation: rise-in 260ms var(--ease) both; }
-.row-in { animation: slide-side 240ms var(--ease) both; }
+.card-in { animation: rise-in 260ms var(--ease) backwards; }
+.row-in { animation: slide-side 240ms var(--ease) backwards; }
 .spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; animation: spin .7s linear infinite; display: inline-block; }
 .spinner.dark { border-color: rgba(15,23,42,.15); border-top-color: var(--teal); }
 .person.me .av { animation: pulse-ring 2.6s ease-out infinite; }
@@ -137,3 +137,10 @@ table.tbl tbody tr:hover { background: #fbfdff; }
 .tabbar { scrollbar-width: none; }
 .tabbar::-webkit-scrollbar { display: none; }
 .admin-nav { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.18) transparent; }
+
+/* القوائم المنسدلة داخل الصفوف يجب أن تعلو ما بعدها */
+.rowmenu { position: relative; }
+.rowmenu.open { z-index: 60; }
+.card:has(.rowmenu.open), tr:has(.rowmenu.open) { position: relative; z-index: 60; }
+.rowmenu .popover { z-index: 60; }
+.btn-ghost.is-open { background: var(--slate-100); color: var(--text); }
