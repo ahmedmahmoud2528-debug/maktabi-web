@@ -4,7 +4,6 @@ import { DESKS, FLOORS, PEOPLE, PLAN, type Desk, type Person } from '../data'
 import { useStore } from '../store'
 import { AssignOwnerDialog } from '../components/AssignOwner'
 import { I } from '../components/Icons'
-import { InviteModal } from '../components/InviteModal'
 import { Sidebar } from '../components/Sidebar'
 
 type Pop =
@@ -84,7 +83,7 @@ export default function Floor() {
         </div>
 
         <div className="rail" onClick={e => e.stopPropagation()}>
-          <button title="تعديل الطابق" onClick={() => s.toast('محرر الطابق', 'المحرر سيُضاف في التحديث القادم.')}><I.Magic /></button>
+          <button title="تعديل الطابق" onClick={() => nav('/editor')}><I.Magic /></button>
           <button title="الطوابق" className={pop?.kind === 'floors' ? 'on' : ''} onClick={() => setPop(p => p?.kind === 'floors' ? null : { kind: 'floors' })}><I.Layers /></button>
           <button title="ملء الشاشة" onClick={() => document.documentElement.requestFullscreen?.()}><I.Expand /></button>
           <button title="موقعي" onClick={() => s.toast('موقعك', 'أنت في ' + s.user.where + '.')}><I.Gps /></button>
@@ -100,8 +99,6 @@ export default function Floor() {
       </div>
 
       {pop?.kind === 'assign' && <AssignOwnerDialog desk={pop.desk} onClose={() => setPop(null)} />}
-      {s.invite && <InviteModal />}
-      <Toasts />
     </div>
   )
 }

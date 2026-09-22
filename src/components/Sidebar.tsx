@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { CHANNELS, EMOJIS, GROUPS, PEOPLE, type Person } from '../data'
 import { useStore } from '../store'
 import { I } from './Icons'
@@ -7,6 +8,7 @@ const PRESENCE: Record<Person['presence'], [string, string]> = { available: ['م
 
 export function Sidebar({ onLocate }: { onLocate: (p: Person) => void }) {
   const { dm, openDM, setInvite, user, toast } = useStore()
+  const nav = useNavigate()
   const [q, setQ] = useState('')
   const person = dm ? PEOPLE.find(p => p.id === dm) : null
   if (person) return <DM person={person} onBack={() => openDM(null)} onLocate={onLocate} />
@@ -22,7 +24,7 @@ export function Sidebar({ onLocate }: { onLocate: (p: Person) => void }) {
       </div>
       <div className="sb-invite">
         <button className="btn btn-primary btn-fill" onClick={() => setInvite(true)}>دعوة عضو</button>
-        <button className="apps" title="التطبيقات" onClick={() => toast('التطبيقات والإدارة', 'قائمة التطبيقات ستُضاف في التحديث القادم.')}><I.Apps size={20} /></button>
+        <button className="apps" title="التطبيقات" onClick={() => nav('/admin/members')}><I.Apps size={20} /></button>
       </div>
       <div className="sb-search"><div className="field"><I.Search className="icon-sm" style={{ color: 'var(--text-3)' }} /><input placeholder="ابحث عن شخص أو مكان" value={q} onChange={e => setQ(e.target.value)} /></div></div>
       <div className="sb-body">
