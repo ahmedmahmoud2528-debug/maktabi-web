@@ -34,7 +34,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
           <NavLink to="/admin/billing" className={link}>الفوترة والاشتراك<I.Card size={20} /></NavLink>
           <NavLink to="/admin/settings" className={link}>الإعدادات<I.Settings size={20} /></NavLink>
         </div>
-        <div className="divider-dark" style={{ marginTop: 14 }} />
+        <div className="divider-dark foot-sep" />
         <button className="prof" onClick={() => nav('/admin/profile')}>
           <span className="avatar teal" style={{ width: 38, height: 38, fontSize: 14 }}>{user.initial}</span>
           <span className="t"><b>{user.name}</b><span>{user.role}</span></span>

@@ -144,3 +144,4 @@ table.tbl tbody tr:hover { background: #fbfdff; }
 .card:has(.rowmenu.open), tr:has(.rowmenu.open) { position: relative; z-index: 60; }
 .rowmenu .popover { z-index: 60; }
 .btn-ghost.is-open { background: var(--slate-100); color: var(--text); }
+.admin-nav .foot-sep { margin-top: auto; }
