@@ -1,0 +1,61 @@
+/* ===== تفاعلات المكتب: الانتقال، مدى الصوت، إضاءة الغرفة ===== */
+.plan { cursor: default; user-select: none; }
+.spotlight { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; transition: opacity 320ms var(--ease); }
+
+.audio-radius {
+  position: absolute; border-radius: 50%; pointer-events: none; z-index: 1;
+  background: radial-gradient(circle, rgba(20,184,166,.16) 0%, rgba(20,184,166,.07) 55%, rgba(20,184,166,0) 72%);
+  border: 1.5px dashed rgba(20,184,166,.55);
+  transition: left 620ms var(--ease), top 620ms var(--ease), width 220ms var(--ease), height 220ms var(--ease), opacity 220ms var(--ease);
+  animation: radius-breathe 3.6s ease-in-out infinite;
+}
+@keyframes radius-breathe { 0%,100% { opacity: .9; transform: scale(1) } 50% { opacity: 1; transform: scale(1.02) } }
+
+.person { transition: left 620ms var(--ease), top 620ms var(--ease), opacity 220ms var(--ease), filter 220ms var(--ease); z-index: 4; }
+.person.faded { opacity: .55; filter: grayscale(.45); }
+.person.heard .av { box-shadow: 0 0 0 2px rgba(20,184,166,.75), 0 2px 6px rgba(0,0,0,.25); }
+.person.me { z-index: 6; }
+.person.me::before { content: ''; position: absolute; inset: -26px -6px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.34), rgba(255,255,255,0) 70%); z-index: -1; pointer-events: none; }
+.person.me.walking .av { animation: step .32s ease-in-out 2; }
+@keyframes step { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
+
+.door {
+  position: absolute; width: 26px; height: 16px; border-radius: 0 0 8px 8px; z-index: 5;
+  background: var(--card); border: 1px solid var(--border); border-top: 0; color: var(--text-2);
+  display: grid; place-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.18);
+  transition: background var(--t) var(--ease), color var(--t) var(--ease), transform var(--t) var(--ease);
+}
+.door:hover { background: var(--teal); color: #fff; transform: translateY(2px); }
+
+.where-pill {
+  position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px;
+  border-radius: 999px; background: var(--card); border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm); font-size: 12.5px; color: var(--text-2); z-index: 6;
+  animation: dissolve-in var(--t) var(--ease) both;
+}
+.where-pill svg { color: var(--teal); }
+
+.knock {
+  position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px; width: 520px; max-width: calc(100% - 40px);
+  padding: 14px 16px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; box-shadow: var(--shadow); z-index: 30;
+}
+.knock .tile { width: 38px; height: 38px; border-radius: 12px; background: var(--teal-50); color: var(--teal-pressed); display: grid; place-items: center; flex: 0 0 auto; }
+
+.ai-panel {
+  position: absolute; left: 42px; bottom: 108px; width: 340px; height: 470px;
+  display: flex; flex-direction: column; z-index: 20; overflow: hidden;
+}
+.ai-body { flex: 1; overflow: auto; padding: 14px; display: flex; flex-direction: column; gap: 8px; justify-content: flex-end; }
+.rec-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--red); animation: rec 1s ease-in-out infinite; }
+@keyframes rec { 0%,100% { opacity: 1 } 50% { opacity: .25 } }
+
+/* السبورة */
+.wb { position: relative; height: 100vh; background: var(--page); overflow: hidden; }
+.wb-canvas { position: absolute; inset: 64px 24px 24px; border-radius: 18px; background: #fff; border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow-sm); background-image: radial-gradient(var(--slate-200) 1px, transparent 1px); background-size: 22px 22px; }
+.wb-card { position: absolute; width: 190px; padding: 12px; border-radius: 12px; box-shadow: var(--shadow-sm); font-size: 12.5px; cursor: grab; transition: box-shadow var(--t) var(--ease), transform var(--t) var(--ease); }
+.wb-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.wb-card.sel { outline: 2px solid var(--teal); outline-offset: 2px; }
+.wb-top { position: absolute; top: 14px; inset-inline: 24px; display: flex; align-items: center; gap: 10px; z-index: 5; }

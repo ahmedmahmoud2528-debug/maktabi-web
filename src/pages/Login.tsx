@@ -36,10 +36,10 @@ export default function Login() {
           </div>
           <div className="actions">
             <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13 }}><input type="checkbox" defaultChecked /> تذكّرني</label>
-            <a className="link" href="#/">نسيت كلمة المرور؟</a>
+            <a className="link" href="#/forgot">نسيت كلمة المرور؟</a>
           </div>
           <button className="btn btn-primary" type="submit">تسجيل الدخول</button>
-          <p className="caption" style={{ textAlign: 'center' }}>ليس لديك حساب؟ <a className="link" href="#/">أنشئ حسابًا</a></p>
+          <p className="caption" style={{ textAlign: 'center' }}>ليس لديك حساب؟ <a className="link" href="#/signup">أنشئ حسابًا</a></p>
         </form>
       </div>
       <Hero />
