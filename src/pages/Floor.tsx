@@ -269,22 +269,24 @@ function ControlBar({ onLeave, inRoom }: { onLeave: () => void; inRoom: boolean 
   const s = useStore()
   const [showStatus, setShowStatus] = useState(false)
   return (
+    {/* RTL: أول عنصر = أقصى اليمين. الترتيب البصري زي فيجما:
+        مغادرة | نافذة مستقلة · الغرف · الحالة · التسجيل · مشاركة الشاشة | الكاميرا · الميكروفون */}
     <div className="ctrl-bar" onClick={e => e.stopPropagation()}>
-      <button className="ctrl leave" onClick={onLeave}><I.Leave />مغادرة</button>
+      <button className={`ctrl ${s.mic ? 'on' : 'off'}`} onClick={() => s.toggle('mic')}>{s.mic ? <I.Mic /> : <I.MicOff />}الميكروفون</button>
+      <button className={`ctrl ${s.cam ? 'on' : 'off'}`} onClick={() => s.toggle('cam')}>{s.cam ? <I.Cam /> : <I.CamOff />}الكاميرا</button>
       <span className="ctrl-sep" />
-      <button className="ctrl" onClick={() => s.toast('نافذة مستقلة', 'فتح المكتب في نافذة صغيرة فوق باقي التطبيقات.')}><I.Popout />نافذة مستقلة</button>
-      <button className="ctrl" onClick={() => s.toast('الغرف', ROOMS.map(r => r.name).join(' · '))}><I.Rooms />الغرف</button>
+      <button className={`ctrl ${s.sharing ? 'on' : ''}`} onClick={() => { s.toggle('sharing'); s.toast(s.sharing ? 'تم إيقاف مشاركة الشاشة' : 'بدأت مشاركة الشاشة', inRoom ? 'يراها من في الغرفة فقط.' : 'يراها من في نطاق صوتك.') }}><I.Screen />مشاركة الشاشة</button>
+      <button className={`ctrl ${s.recording ? 'off' : ''}`} onClick={() => { s.toggle('recording'); s.toast(s.recording ? 'تم إيقاف التسجيل' : 'بدأ التسجيل', s.recording ? undefined : 'سيُحفظ في مكتبة التسجيلات.') }}><I.Record />التسجيل</button>
       <div style={{ position: 'relative' }}>
         <button className="ctrl" onClick={() => setShowStatus(v => !v)}><I.Status />الحالة</button>
         {showStatus && <div className="popover menu" style={{ bottom: 64, left: '50%', transform: 'translateX(-50%)' }}>
           {['متاح', 'تركيز', 'بعيد', 'لا تزعجني'].map(x => <button key={x} className="menu-item" onClick={() => { setShowStatus(false); s.toast('تم تحديث حالتك', x) }}><i className={`dot ${x === 'متاح' ? 'green' : x === 'تركيز' ? 'purple' : x === 'بعيد' ? 'amber' : 'gray'}`} />{x}</button>)}
         </div>}
       </div>
-      <button className={`ctrl ${s.recording ? 'off' : ''}`} onClick={() => { s.toggle('recording'); s.toast(s.recording ? 'تم إيقاف التسجيل' : 'بدأ التسجيل', s.recording ? undefined : 'سيُحفظ في مكتبة التسجيلات.') }}><I.Record />التسجيل</button>
-      <button className={`ctrl ${s.sharing ? 'on' : ''}`} onClick={() => { s.toggle('sharing'); s.toast(s.sharing ? 'تم إيقاف مشاركة الشاشة' : 'بدأت مشاركة الشاشة', inRoom ? 'يراها من في الغرفة فقط.' : 'يراها من في نطاق صوتك.') }}><I.Screen />مشاركة الشاشة</button>
+      <button className="ctrl" onClick={() => s.toast('الغرف', ROOMS.map(r => r.name).join(' · '))}><I.Rooms />الغرف</button>
+      <button className="ctrl" onClick={() => s.toast('نافذة مستقلة', 'فتح المكتب في نافذة صغيرة فوق باقي التطبيقات.')}><I.Popout />نافذة مستقلة</button>
       <span className="ctrl-sep" />
-      <button className={`ctrl ${s.cam ? 'on' : 'off'}`} onClick={() => s.toggle('cam')}>{s.cam ? <I.Cam /> : <I.CamOff />}الكاميرا</button>
-      <button className={`ctrl ${s.mic ? 'on' : 'off'}`} onClick={() => s.toggle('mic')}>{s.mic ? <I.Mic /> : <I.MicOff />}الميكروفون</button>
+      <button className="ctrl leave" onClick={onLeave}><I.Leave />مغادرة</button>
     </div>
   )
 }
