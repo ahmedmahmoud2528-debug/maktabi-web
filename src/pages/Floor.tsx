@@ -144,7 +144,7 @@ export default function Floor() {
           <span className="zoom">{Math.round(zoom * 100)}%</span>
           <button title="تكبير" onClick={() => setZoom(z => Math.min(1.6, +(z + 0.1).toFixed(2)))}><I.Plus /></button>
           <button title="تصغير" onClick={() => setZoom(z => Math.max(0.6, +(z - 0.1).toFixed(2)))}><I.Minus /></button>
-          {pop?.kind === 'floors' && <FloorSwitcher current={s.floor} onPick={id => { s.setFloor(id); s.toast(FLOORS.find(f => f.id === id)!.name, 'تم الانتقال إلى الطابق.'); setPop(null) }} />}
+          {pop?.kind === 'floors' && <FloorSwitcher current={s.floor} onPick={id => { s.setFloor(id); setPop(null) }} />}
         </div>
 
         <button className="ai-btn" title="المساعد الذكي" onClick={e => { e.stopPropagation(); setPop({ kind: 'ai' }) }}><I.Sparkle /></button>
