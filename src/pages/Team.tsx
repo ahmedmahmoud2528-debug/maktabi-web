@@ -316,9 +316,9 @@ function TeamDetails({ name, onBack }: { name: string; onBack: () => void }) {
   const PickList = ({ items, onPick }: { items: M[]; onPick: (m: M) => void }) => (
     <div className="opt-list">
       {items.map(m => <button key={m.id} className={`ao-row ${pick === m.id ? 'on' : ''}`} onClick={() => { setPick(m.id); onPick(m) }}>
-        {pick === m.id && <span className="chk"><I.Check size={14} /></span>}
-        <span className="txt" style={{ textAlign: 'end' }}><b>{m.name}</b><small>{m.title} · {m.role}</small></span>
         <span className="avatar">{m.name[0]}</span>
+        <span className="txt"><b>{m.name}</b><small>{m.title} · {m.role}</small></span>
+        {pick === m.id && <span className="chk"><I.Check size={14} /></span>}
       </button>)}
       {!items.length && <p className="caption" style={{ padding: 10 }}>لا يوجد أعضاء متاحون.</p>}
     </div>
@@ -463,9 +463,9 @@ function Ownership() {
             <div className="label" style={{ marginBottom: 8 }}>المالك الجديد</div>
             <div className="opt-list">
               {cands.map(m => <button key={m.id} className={`ao-row ${pick === m.id ? 'on' : ''}`} onClick={() => setPick(m.id)}>
-                {pick === m.id && <span className="chk"><I.Check size={14} /></span>}
-                <span className="txt" style={{ textAlign: 'end' }}><b>{m.name}</b><small>{m.role}</small></span>
                 <span className="avatar">{m.name[0]}</span>
+                <span className="txt"><b>{m.name}</b><small>{m.role}</small></span>
+                {pick === m.id && <span className="chk"><I.Check size={14} /></span>}
               </button>)}
             </div>
             <div className="divider" />

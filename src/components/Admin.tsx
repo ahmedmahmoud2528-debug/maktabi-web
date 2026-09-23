@@ -90,8 +90,9 @@ export function Filter({ label, items, value, onPick, width = 150 }: { label: st
   }, [open])
   return (
     <div ref={ref} style={{ position: 'relative' }}>
-      <button className="btn btn-secondary btn-sm" style={{ width, justifyContent: 'space-between' }} onClick={() => setOpen(o => !o)}>
-        <span style={{ color: value === items[0] ? 'var(--text-2)' : 'var(--text)' }}>{label}: {value}</span><I.Chevron size={14} />
+      <button className="btn btn-secondary btn-sm" style={{ minWidth: width, justifyContent: 'space-between', gap: 12, paddingInlineStart: 12 }} onClick={() => setOpen(o => !o)}>
+        <span style={{ color: value === items[0] ? 'var(--text-2)' : 'var(--text)' }}>{label}: {value}</span>
+        <I.Chevron size={14} style={{ flex: '0 0 auto', color: 'var(--text-3)' }} />
       </button>
       {open && <div className="popover menu" style={{ top: 42, insetInlineStart: 0, minWidth: width, zIndex: 60 }}>
         {items.map(it => <button key={it} className="menu-item" onClick={() => { onPick(it); setOpen(false) }}>{it}{value === it && <I.Check size={14} style={{ marginInlineStart: 'auto', color: 'var(--teal)' }} />}</button>)}

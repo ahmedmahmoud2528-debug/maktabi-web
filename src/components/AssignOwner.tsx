@@ -54,10 +54,10 @@ export function AssignOwnerDialog({ desk, onClose }: { desk: Desk; onClose: () =
               const dim = hasOwner && !isCurrent
               return (
                 <button key={p.id} className={`ao-row ${on ? 'on' : ''} ${removal ? 'removal' : ''} ${dim ? 'dim' : ''}`} disabled={dim} onClick={() => hasOwner ? setUnmarked(v => !v) : setPicked(p.id)}>
-                  {on && <span className="chk"><I.Check size={14} /></span>}
-                  {removal && <span className="tag">سيُزال</span>}
-                  <span className="txt" style={{ textAlign: 'end' }}><b>{p.name}{p.id === user.id ? '' : ''}</b><small>{p.id === user.id ? 'أنت' : p.role}</small></span>
                   <span className="avatar">{p.initial}</span>
+                  <span className="txt"><b>{p.name}</b><small>{p.id === user.id ? 'أنت' : p.role}</small></span>
+                  {removal && <span className="tag">سيُزال</span>}
+                  {on && <span className="chk"><I.Check size={14} /></span>}
                 </button>
               )
             })}
