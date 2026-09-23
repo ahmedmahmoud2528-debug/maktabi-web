@@ -178,3 +178,44 @@ table.tbl tbody tr:hover { background: #fbfdff; }
 .dd-cell .caption { display: block; margin-bottom: 4px; }
 .dd-cell b { font-size: 13.5px; }
 svg.rot { transform: rotate(180deg); transition: transform var(--t) var(--ease); }
+
+/* ===== Day Detail Panel — مطابق لفيجما ===== */
+.day-detail { margin: 0 0 4px; padding: 16px; background: #f8fafc; border: 1px solid var(--border); border-radius: 14px; }
+.dd-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.dd-head b { font-size: 15px; font-weight: 700; }
+.dd-away { font-size: 11.5px; color: #94a3b8; }
+.dd-badge { display: inline-flex; align-items: center; height: 25px; padding: 0 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }
+.dd-badge.slate { background: #f1f5f9; color: #0f172a; }
+.dd-badge.amber { background: #fffbeb; color: #92400e; }
+.dd-badge.green { background: #f0fdf4; color: #166534; }
+.dd-badge.indigo { background: #e0e7ff; color: #4f46e5; }
+
+.dd-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+.dd-stats span { display: block; font-size: 11.5px; color: #94a3b8; margin-bottom: 3px; }
+.dd-stats b { font-size: 14px; font-weight: 700; color: #0f172a; }
+.dd-stats b.amber { color: #f59e0b; }
+.dd-divider { height: 1px; background: var(--border); margin-bottom: 12px; }
+
+.dd-chips { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.dd-chip { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 12px; border-radius: 999px; background: #fff; border: 1px solid var(--border); font-size: 12px; }
+.dd-chip .s { color: #94a3b8; }
+.dd-chip b { font-size: 13px; color: #0f172a; }
+.dd-chip em { font-style: normal; font-size: 11px; color: #94a3b8; }
+.dot.indigo { background: #8e51ff; }
+
+.dd-track { direction: ltr; display: flex; gap: 2px; height: 11px; margin-bottom: 6px; }
+.dd-track i { border-radius: 3px; }
+.dd-track i.green { background: #22c55e; }
+.dd-track i.indigo { background: #8e51ff; }
+.dd-track i.amber { background: #f59e0b; }
+.dd-ticks { direction: ltr; display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; margin-bottom: 14px; }
+
+.dd-sessions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.dd-sess { display: flex; align-items: center; gap: 10px; height: 45px; padding: 0 12px; background: #fff; border: 1px solid var(--border); border-radius: 10px; }
+.dd-sess .bar { width: 3px; height: 24px; border-radius: 2px; flex: 0 0 auto; }
+.dd-sess .bar.green { background: #22c55e; }
+.dd-sess .bar.indigo { background: #8e51ff; }
+.dd-sess .bar.amber { background: #f59e0b; }
+.dd-sess .rng { font-size: 11.5px; color: #94a3b8; }
+.dd-sess b { margin-inline-start: auto; font-size: 13px; color: #0f172a; }
+.dd-note { font-size: 11.5px; color: var(--teal); line-height: 1.7; }

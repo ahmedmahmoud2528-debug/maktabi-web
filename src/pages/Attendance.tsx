@@ -38,6 +38,26 @@ const AP0: Ap[] = [
 
 const ACTIONS = ['إذن تأخير', 'إجازة يوم', 'انصراف مبكر', 'تعديل يدوي']
 
+/* لوحة «تفاصيل الحضور لليوم» — مطابقة لـ Day Detail Panel في فيجما */
+type St2 = 'متاح' | 'تركيز' | 'بعيد'
+const TONE: Record<St2, string> = { 'متاح': 'green', 'تركيز': 'indigo', 'بعيد': 'amber' }
+const SESSIONS: { s: St2; from: string; to: string; dur: string; w: number }[] = [
+  { s: 'متاح', from: '09:19', to: '11:02', dur: '1 س 43 د', w: 212 },
+  { s: 'تركيز', from: '11:02', to: '12:00', dur: '58 د', w: 119 },
+  { s: 'بعيد', from: '12:00', to: '12:08', dur: '8 د', w: 16 },
+  { s: 'متاح', from: '12:08', to: '13:50', dur: '1 س 42 د', w: 212 },
+  { s: 'تركيز', from: '13:50', to: '14:48', dur: '58 د', w: 119 },
+  { s: 'بعيد', from: '14:48', to: '14:57', dur: '9 د', w: 19 },
+  { s: 'متاح', from: '14:57', to: '16:38', dur: '1 س 41 د', w: 208 },
+  { s: 'تركيز', from: '16:38', to: '17:36', dur: '58 د', w: 119 },
+]
+const SUMMARY: { s: St2; dur: string; n: string }[] = [
+  { s: 'متاح', dur: '5 س 6 د', n: '3×' },
+  { s: 'تركيز', dur: '2 س 54 د', n: '3×' },
+  { s: 'بعيد', dur: '17 د', n: '2×' },
+]
+const TICKS = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00']
+
 /* ---------- سجل حضور الموظفين ---------- */
 type Emp = { id: string; name: string; initial: string; title: string; team: string; shift: string; req: string; done: string; of: string; extra: string; brk: string; left: string; state: 'متبقي وقت' | 'مكتمل' | 'وقت إضافي' }
 const EMPS: Emp[] = [
@@ -264,15 +284,34 @@ export default function Attendance() {
                             <div className="day-detail">
                               <div className="dd-head">
                                 <b>تفاصيل الحضور لليوم</b>
-                                <span className="pill teal" dir="ltr">{d.in} — {d.out}</span>
+                                <span className="dd-badge slate" dir="ltr">{d.in} — {d.out}</span>
                                 <span style={{ flex: 1 }} />
-                                <span className="caption">وقت «بعيد» {d.away}</span>
-                                <span className="pill amber">خرج ورجع {ar(d.trips)} مرات</span>
+                                <span className="dd-badge amber">خرج ورجع {ar(d.trips)} مرات</span>
+                                <span className="dd-away">وقت «بعيد» {d.away}</span>
                               </div>
-                              <div className="grid g4" style={{ gap: 10 }}>
-                                {[['نظام الدوام', d.sys, ''], ['الساعات المطلوبة اليوم', d.req, ''], ['الساعات المحتسبة', d.done, ''], ['المتبقي', d.left, 'var(--amber)']].map(([k, v, c]) =>
-                                  <div className="dd-cell" key={k}><span className="caption">{k}</span><b style={c ? { color: c } : undefined}>{v}</b></div>)}
+                              <div className="dd-stats">
+                                <div><span>نظام الدوام</span><b>{d.sys}</b></div>
+                                <div><span>الساعات المطلوبة اليوم</span><b>{d.req}</b></div>
+                                <div><span>الساعات المحتسبة</span><b>{d.done}</b></div>
+                                <div><span>المتبقي</span><b className="amber">{d.left}</b></div>
                               </div>
+                              <div className="dd-divider" />
+                              <div className="dd-chips">
+                                {SUMMARY.map(x => <span key={x.s} className="dd-chip">
+                                  <i className={`dot ${TONE[x.s]}`} /><span className="s">{x.s}</span><b>{x.dur}</b><em>{x.n}</em>
+                                </span>)}
+                              </div>
+                              <div className="dd-track">{SESSIONS.map((x, k) => <i key={k} className={TONE[x.s]} style={{ flex: x.w }} />)}</div>
+                              <div className="dd-ticks">{TICKS.map(t => <span key={t}>{t}</span>)}</div>
+                              <div className="dd-sessions">
+                                {SESSIONS.map((x, k) => <div key={k} className="dd-sess">
+                                  <i className={`bar ${TONE[x.s]}`} />
+                                  <span className={`dd-badge ${TONE[x.s]}`}>{x.s}</span>
+                                  <span className="rng" dir="ltr">{x.from} → {x.to}</span>
+                                  <b>{x.dur}</b>
+                                </div>)}
+                              </div>
+                              <p className="dd-note">الحالات هنا تصف التواجد داخل مساحة العمل فقط، وليست دليل حضور أو غياب. وقت «بعيد» يستهلك رصيد الراحة اليومي أولًا، والزائد فقط هو ما يخصم من الوقت المحتسب.</p>
                             </div>
                           </td></tr>}
                         </Fragment>)}
