@@ -231,7 +231,7 @@ export default function Attendance() {
                   <td><span className={`pill ${e.state === 'مكتمل' ? 'green' : e.state === 'وقت إضافي' ? 'teal' : 'amber'}`}>{e.state}</span></td>
                   <td><I.Chevron size={14} className={openEmp === e.id ? 'rot' : ''} /></td>
                 </tr>
-                {openEmp === e.id && <tr className="sub-row"><td colSpan={10}>
+                {openEmp === e.id && <tr className="sub-row" onClick={ev => ev.stopPropagation()}><td colSpan={10}>
                   <div className="emp-log">
                     <div className="emp-log-head">
                       <b>سجل {e.name} — ١ أغسطس — ٢٦ أغسطس 2026</b>
