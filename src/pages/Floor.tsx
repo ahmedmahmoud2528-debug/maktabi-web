@@ -94,9 +94,11 @@ export default function Floor() {
                 onDoubleClick={e => { e.stopPropagation(); walkTo(d.x + d.w + 6, d.y, d.room ?? 'المكتب') }} />
             ))}
 
+            {/* الأبواب مرسومة أصلًا في مخطط فيجما — هنا منطقة نقر شفافة فوقها فقط */}
             {ROOMS.filter(r => r.name !== 'المطبخ').map(r => (
-              <button key={'k' + r.name} className="door" title={`اطرق باب ${r.name}`} style={{ left: px(r.x + r.w / 2) - 11, top: px(r.y + r.h) - 11 }}
-                onClick={e => { e.stopPropagation(); setKnock(r) }}><I.Door size={13} /></button>
+              <button key={'k' + r.name} className="door-hit" title={`اطرق باب ${r.name}`}
+                style={{ left: px(r.x + r.w / 2) - 22, top: px(r.y + r.h) - 16, width: 44, height: 32 }}
+                onClick={e => { e.stopPropagation(); setKnock(r) }} />
             ))}
 
             {DESKS.filter(d => d.clock).map(d => (

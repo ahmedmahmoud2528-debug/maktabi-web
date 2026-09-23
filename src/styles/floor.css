@@ -101,3 +101,7 @@
   color: var(--teal); box-shadow: 0 1px 3px rgba(15,23,42,.18);
 }
 .door:hover { background: var(--teal); color: #fff; transform: none; }
+
+/* الباب: منطقة نقر شفافة فوق الباب المرسوم في المخطط — بدون أي شكل مضاف */
+.door-hit { position: absolute; background: none; border: 0; padding: 0; cursor: pointer; z-index: 5; border-radius: 8px; }
+.door-hit:hover { background: rgba(20,184,166,.16); }

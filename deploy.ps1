@@ -3,7 +3,8 @@ $ErrorActionPreference = "Stop"
 $env:Path = "$env:USERPROFILE\.maktabi-tools\node;" + $env:Path
 Set-Location $PSScriptRoot
 npm run build
-New-Item -ItemType File -Path "dist\.nojekyll" -Force | Out-Null
+New-Item -ItemType File -Path "dist.nojekyll" -Force | Out-Null
+[IO.File]::WriteAllText("distversion.txt", [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds().ToString())
 $tmp = Join-Path $env:TEMP "maktabi-pages"
 if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
 Copy-Item "dist" $tmp -Recurse
