@@ -258,10 +258,14 @@ function Roles() {
 }
 
 /* ================= الفرق ================= */
+const TEMPLATES = ['إدارة فريق التصميم', 'إدارة الطابق', 'مشرف العمليات', 'وصول محدود للتقارير']
+
 function TeamsTab() {
   const { toast } = useStore()
   const [create, setCreate] = useState(false)
   const [name, setName] = useState('')
+  const [sel, setSel] = useState<string | null>(null)
+  if (sel) return <TeamDetails name={sel} onBack={() => setSel(null)} />
   return (
     <>
       <PageHead title="الفرق" sub="نظّم الأعضاء في فرق واربط كل فريق بقالب صلاحيات" actions={<button className="btn btn-primary btn-sm" onClick={() => setCreate(true)}><I.Plus size={16} />فريق جديد</button>} />
@@ -270,8 +274,8 @@ function TeamsTab() {
           <Panel key={t.name} title={t.name} sub={`${t.n} أعضاء · قائد الفريق: ${t.lead}`} icon={<I.Group size={16} />}>
             <div className="pill teal" style={{ marginBottom: 12 }}>{t.tpl}</div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <button className="btn btn-secondary btn-sm btn-fill" onClick={() => toast(t.name, 'صفحة تفاصيل الفريق ستُضاف قريبًا.')}>التفاصيل</button>
-              <button className="btn btn-ghost btn-sm" onClick={() => toast('تغيير قالب الصلاحيات', 'اختر قالبًا من تبويب الأدوار.')}>القالب</button>
+              <button className="btn btn-secondary btn-sm btn-fill" onClick={() => setSel(t.name)}>التفاصيل</button>
+              <button className="btn btn-ghost btn-sm" onClick={() => setSel(t.name)}>القالب</button>
             </div>
           </Panel>
         ))}
@@ -290,6 +294,138 @@ function TeamsTab() {
           </div>
         </div>
       )}
+    </>
+  )
+}
+
+/* ================= تفاصيل الفريق ================= */
+const T_TABS = ['نظرة عامة', 'الأعضاء', 'الصلاحيات']
+function TeamDetails({ name, onBack }: { name: string; onBack: () => void }) {
+  const { toast } = useStore()
+  const t = TEAMS.find(x => x.name === name)!
+  const [tab, setTab] = useState(T_TABS[0])
+  const [tpl, setTpl] = useState(t.tpl)
+  const [lead, setLead] = useState(t.lead)
+  const [ids, setIds] = useState(MEMBERS.filter(m => m.team === name).map(m => m.id))
+  const [dlg, setDlg] = useState<'add' | 'lead' | 'tpl' | 'archive' | null>(null)
+  const [rm, setRm] = useState<M | null>(null)
+  const [pick, setPick] = useState<string | null>(null)
+  const list = MEMBERS.filter(m => ids.includes(m.id))
+  const outside = MEMBERS.filter(m => !ids.includes(m.id))
+
+  const PickList = ({ items, onPick }: { items: M[]; onPick: (m: M) => void }) => (
+    <div className="opt-list">
+      {items.map(m => <button key={m.id} className={`ao-row ${pick === m.id ? 'on' : ''}`} onClick={() => { setPick(m.id); onPick(m) }}>
+        {pick === m.id && <span className="chk"><I.Check size={14} /></span>}
+        <span className="txt" style={{ textAlign: 'end' }}><b>{m.name}</b><small>{m.title} · {m.role}</small></span>
+        <span className="avatar">{m.name[0]}</span>
+      </button>)}
+      {!items.length && <p className="caption" style={{ padding: 10 }}>لا يوجد أعضاء متاحون.</p>}
+    </div>
+  )
+
+  return (
+    <>
+      <button className="back-link" onClick={onBack}><I.ChevronR size={14} />كل الفرق</button>
+      <PageHead title={name} sub={`${list.length} أعضاء · قائد الفريق: ${lead}`}
+        actions={<button className="btn btn-secondary btn-sm" style={{ color: 'var(--red)' }} onClick={() => setDlg('archive')}>أرشفة الفريق</button>} />
+      <Tabs items={T_TABS} value={tab} onChange={setTab} />
+
+      {tab === T_TABS[0] && <>
+        <div className="grid g3" style={{ marginBottom: 14 }}>
+          <Stat icon={<I.People size={18} />} n={String(list.length)} unit="عضو" t="أعضاء الفريق" />
+          <Stat icon={<I.Status size={18} />} n={tpl} t="قالب الصلاحيات" />
+          <Stat icon={<I.Calendar size={18} />} n="1 فبراير 2026" t="تاريخ الإنشاء" />
+        </div>
+        <div className="grid g2">
+          <Panel title="قائد الفريق" icon={<I.Crown size={16} />} actions={<button className="btn btn-secondary btn-sm" onClick={() => { setPick(null); setDlg('lead') }}>تغيير القائد</button>}>
+            <div className="cell-user" style={{ padding: '8px 0' }}>
+              <span className="avatar teal">{lead[0]}</span>
+              <div style={{ flex: 1 }}><b>{lead}</b><span className="caption">يملك إدارة أعضاء الفريق وقالب صلاحياته</span></div>
+            </div>
+          </Panel>
+          <Panel title="قالب الصلاحيات" icon={<I.Status size={16} />} actions={<button className="btn btn-secondary btn-sm" onClick={() => { setPick(null); setDlg('tpl') }}>تغيير القالب</button>}>
+            <div className="card" style={{ padding: '0 14px' }}>
+              <div className="detail-row"><span>القالب الحالي</span><b>{tpl}</b></div>
+              <div className="detail-row"><span>ينطبق على</span><b>{list.length} أعضاء</b></div>
+            </div>
+          </Panel>
+        </div>
+      </>}
+
+      {tab === T_TABS[1] && <Panel title="أعضاء الفريق" sub="الأعضاء المرتبطون بهذا الفريق" icon={<I.People size={16} />}
+        actions={<button className="btn btn-primary btn-sm" onClick={() => { setPick(null); setDlg('add') }}><I.Plus size={15} />إضافة عضو</button>}>
+        {list.length ? <table className="tbl">
+          <thead><tr><th>العضو</th><th>المسمى الوظيفي</th><th>الدور</th><th /></tr></thead>
+          <tbody>
+            {list.map((m, i) => <tr key={m.id} className="row-in" style={{ animationDelay: `${i * 30}ms` }}>
+              <td><div className="cell-user"><span className="avatar sm dark">{m.name[0]}</span><span><b>{m.name} {m.name === lead && <span className="pill teal">قائد الفريق</span>}</b><span dir="ltr">{m.email}</span></span></div></td>
+              <td dir="ltr" style={{ textAlign: 'right' }}>{m.title}</td>
+              <td>{m.role}</td>
+              <td><RowMenu items={[
+                { label: 'تعيينه قائدًا للفريق', onClick: () => { setLead(m.name); toast('تم تغيير قائد الفريق', m.name) } },
+                { label: 'إزالة من الفريق', danger: true, onClick: () => setRm(m) },
+              ]} /></td>
+            </tr>)}
+          </tbody>
+        </table> : <Empty title="لا يوجد أعضاء في هذا الفريق" sub="أضف أعضاء ليظهروا هنا." action={<button className="btn btn-primary btn-sm" onClick={() => setDlg('add')}>إضافة عضو</button>} />}
+      </Panel>}
+
+      {tab === T_TABS[2] && <Panel title="صلاحيات الفريق" sub={`مصدرها قالب «${tpl}» — ينطبق على كل أعضاء الفريق`} icon={<I.Status size={16} />}
+        actions={<button className="btn btn-secondary btn-sm" onClick={() => { setPick(null); setDlg('tpl') }}>تغيير القالب</button>}>
+        <PrefRow title="إدارة أعضاء الفريق" sub="من صلاحيات القالب"><span className="pill teal"><I.Check size={12} />مفعّل</span></PrefRow>
+        <PrefRow title="تعديل طابق الفريق"><span className="pill teal"><I.Check size={12} />مفعّل</span></PrefRow>
+        <PrefRow title="عرض حضور الفريق"><span className="pill teal"><I.Check size={12} />مفعّل</span></PrefRow>
+        <PrefRow title="تصدير التقارير"><span className="pill">غير مفعّل</span></PrefRow>
+        <p className="caption" style={{ marginTop: 12 }}>تعديل الصلاحيات نفسها يتم من «الأدوار والصلاحيات»، وينطبق على كل من يستخدم القالب.</p>
+      </Panel>}
+
+      {(dlg === 'add' || dlg === 'lead') && (
+        <div className="scrim" onMouseDown={e => { if (e.target === e.currentTarget) setDlg(null) }}>
+          <div className="modal" style={{ width: 460 }}>
+            <div className="modal-header"><span className="tile">{dlg === 'add' ? <I.Plus size={20} /> : <I.Crown size={20} />}</span>
+              <div><div className="modal-title">{dlg === 'add' ? 'إضافة عضو إلى الفريق' : 'تغيير قائد الفريق'}</div>
+                <div className="modal-sub">{dlg === 'add' ? `اختر عضوًا لإضافته إلى «${name}»` : 'القائد يدير أعضاء الفريق وقالب صلاحياته'}</div></div>
+              <button className="btn btn-ghost btn-icon close" onClick={() => setDlg(null)}><I.Close size={18} /></button></div>
+            <div className="divider" />
+            <PickList items={dlg === 'add' ? outside : list} onPick={() => { }} />
+            <div className="divider" />
+            <div className="modal-footer">
+              <button className="btn btn-primary" disabled={!pick} onClick={() => {
+                const m = MEMBERS.find(x => x.id === pick)!
+                if (dlg === 'add') { setIds(v => [...v, m.id]); toast('تمت إضافة العضو', `${m.name} → ${name}`) }
+                else { setLead(m.name); toast('تم تغيير قائد الفريق', m.name) }
+                setDlg(null); setPick(null)
+              }}>{dlg === 'add' ? 'إضافة العضو' : 'تعيين قائدًا'}</button>
+              <button className="btn btn-secondary" onClick={() => setDlg(null)}>إلغاء</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {dlg === 'tpl' && (
+        <div className="scrim" onMouseDown={e => { if (e.target === e.currentTarget) setDlg(null) }}>
+          <div className="modal" style={{ width: 460 }}>
+            <div className="modal-header"><span className="tile"><I.Status size={20} /></span>
+              <div><div className="modal-title">تغيير قالب الصلاحيات</div><div className="modal-sub">سينطبق القالب على كل أعضاء «{name}» فورًا</div></div>
+              <button className="btn btn-ghost btn-icon close" onClick={() => setDlg(null)}><I.Close size={18} /></button></div>
+            <div className="divider" />
+            <div className="opt-list">
+              {TEMPLATES.map(x => <button key={x} className={`opt ${(pick ?? tpl) === x ? 'on' : ''}`} onClick={() => setPick(x)}>{x}{(pick ?? tpl) === x && <I.Check size={16} />}</button>)}
+            </div>
+            <div className="divider" />
+            <div className="modal-footer">
+              <button className="btn btn-primary" disabled={!pick || pick === tpl} onClick={() => { setTpl(pick!); setDlg(null); setPick(null); toast('تم تطبيق القالب', pick!) }}>تطبيق القالب</button>
+              <button className="btn btn-secondary" onClick={() => { setDlg(null); setPick(null) }}>إلغاء</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {rm && <Confirm danger title="إزالة العضو من الفريق؟" body={`سيخرج ${rm.name} من «${name}» ويفقد صلاحيات القالب.`} confirmLabel="نعم، إزالة"
+        onConfirm={() => { setIds(v => v.filter(x => x !== rm.id)); toast('تمت إزالة العضو', rm.name); setRm(null) }} onClose={() => setRm(null)} />}
+      {dlg === 'archive' && <Confirm danger title="أرشفة الفريق؟" body={`سيُخفى «${name}» من القوائم ويفقد أعضاؤه قالب الصلاحيات. يمكن استرجاعه لاحقًا.`} confirmLabel="نعم، أرشفة"
+        onConfirm={() => { setDlg(null); toast('تمت أرشفة الفريق', name); onBack() }} onClose={() => setDlg(null)} />}
     </>
   )
 }
