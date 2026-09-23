@@ -208,6 +208,9 @@ export default function Attendance() {
             <Stat icon={<I.Clock size={18} />} n={String(pending)} unit="طلبات" t="بانتظار الموافقة" />
           </div>
         </Panel>
+      </>}
+
+      {(tab === TABS[0] || tab === TABS[1]) && <>
         <div style={{ height: 14 }} />
 
         <Panel title="سجل الحضور" sub={`${team} — اضغط على أي موظف لعرض سجله التفصيلي.`} icon={<I.People size={16} />}
@@ -282,6 +285,9 @@ export default function Attendance() {
           </table> : <Empty title="لا يوجد موظف مطابق" sub={`لا نتائج لـ «${empQ}».`} action={<button className="btn btn-secondary btn-sm" onClick={() => setEmpQ('')}>مسح البحث</button>} />}
         </Panel>
 
+      </>}
+
+      {tab === TABS[1] && <>
         <div style={{ height: 14 }} />
         <Panel title="سجلي" sub="أيام الدورة الحالية لحسابك" icon={<I.Clock size={16} />}>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
