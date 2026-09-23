@@ -15,6 +15,7 @@ const APPS: [string, JSX.Element, string][] = [
   ['مساحات العمل', <I.Building size={18} />, '/workspaces'],
   ['إدارة المساحة', <I.Status size={18} />, '/admin/workspace'],
   ['الإعدادات', <I.Settings size={18} />, '/admin/settings'],
+  ['السبورة', <I.Edit size={18} />, '/whiteboard'],
 ]
 
 export function Sidebar({ onLocate }: { onLocate: (p: Person) => void }) {
