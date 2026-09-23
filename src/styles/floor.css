@@ -80,3 +80,16 @@
 .app-tile .ic { width: 38px; height: 38px; border-radius: 12px; background: var(--slate-100); color: var(--text-2); display: grid; place-items: center; flex: 0 0 auto; }
 .app-tile:hover .ic { background: #fff; color: var(--teal-pressed); }
 .app-tile .t { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ===== مطابقة فيجما: هالة الصوت والأبواب ===== */
+.audio-radius {
+  background: radial-gradient(circle, rgba(255,255,255,.40) 0%, rgba(255,255,255,.26) 52%, rgba(255,255,255,.10) 74%, rgba(255,255,255,0) 84%);
+  border: 0;
+  animation: none;
+  opacity: 1;
+}
+.person.me::before { content: none; }
+.door {
+  width: 24px; height: 17px; border-radius: 6px; border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(15,23,42,.16);
+}

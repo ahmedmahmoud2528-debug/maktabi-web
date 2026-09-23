@@ -15,7 +15,7 @@ type Pop =
   | { kind: 'ai' }
   | null
 
-const AUDIO_R = 150 // نصف قطر مدى الصوت في المساحة المفتوحة (بوحدات المخطط)
+const AUDIO_R = 88 // نصف قطر مدى الصوت في المساحة المفتوحة (بوحدات المخطط — مطابق لفيجما)
 const roomAt = (x: number, y: number): Room | null => ROOMS.find(r => x > r.x && x < r.x + r.w && y > r.y && y < r.y + r.h) ?? null
 
 export default function Floor() {
