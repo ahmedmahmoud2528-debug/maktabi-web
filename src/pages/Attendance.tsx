@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, useEffect } from 'react'
+import { Fragment, useMemo, useRef, useState, useEffect } from 'react'
 import { AdminLayout, Confirm, Empty, Filter, PageHead, Panel, PrefRow, RowMenu, Stat, Switch, Tabs } from '../components/Admin'
 import { I } from '../components/Icons'
 import { useStore } from '../store'
@@ -37,6 +37,24 @@ const AP0: Ap[] = [
 ]
 
 const ACTIONS = ['إذن تأخير', 'إجازة يوم', 'انصراف مبكر', 'تعديل يدوي']
+
+/* ---------- سجل حضور الموظفين ---------- */
+type Emp = { id: string; name: string; initial: string; title: string; team: string; shift: string; req: string; done: string; of: string; extra: string; brk: string; left: string; state: 'متبقي وقت' | 'مكتمل' | 'وقت إضافي' }
+const EMPS: Emp[] = [
+  { id: 'e1', name: 'أحمد هشيمة', initial: 'أه', title: 'Product Designer', team: 'فريق المنتج', shift: '09:00 — 17:00 · 8 س', req: '176 س', done: '171.7 س', of: 'من أصل 224 س', extra: '—', brk: '7 س 41 د', left: '4 س 20 د', state: 'متبقي وقت' },
+  { id: 'e2', name: 'محمد أمين', initial: 'مأ', title: 'Frontend Developer', team: 'فريق التصميم', shift: '09:00 — 17:00 · 8 س', req: '176 س', done: '178.2 س', of: 'من أصل 224 س', extra: '2 س 12 د', brk: '6 س 05 د', left: '—', state: 'وقت إضافي' },
+  { id: 'e3', name: 'داليا سمير', initial: 'دس', title: 'UX Designer', team: 'فريق التصميم', shift: '10:00 — 18:00 · 8 س', req: '176 س', done: '176 س', of: 'من أصل 224 س', extra: '—', brk: '7 س 10 د', left: '—', state: 'مكتمل' },
+  { id: 'e4', name: 'نور الشامي', initial: 'نش', title: 'QA Engineer', team: '—', shift: '09:00 — 17:00 · 8 س', req: '176 س', done: '162.4 س', of: 'من أصل 224 س', extra: '—', brk: '8 س 02 د', left: '13 س 36 د', state: 'متبقي وقت' },
+]
+
+type DRow = { d: string; in: string; out: string; net: string; brk: string; kind: 'دوام' | 'إجازة' | 'نصف يوم'; late: string; sys: string; req: string; done: string; left: string; trips: number; away: string }
+const DROWS: DRow[] = [
+  { d: 'السبت ١ أغسطس', in: '09:19', out: '17:36', net: '8 س', brk: '17 / 30 د', kind: 'دوام', late: 'متأخر 19 د', sys: 'ساعات مرنة', req: '7 س', done: '6 س 17 د', left: '43 د', trips: 2, away: '17 د من رصيد 30 د' },
+  { d: 'الأحد ٢ أغسطس', in: '09:19', out: '17:36', net: '8 س', brk: '17 / 30 د', kind: 'دوام', late: 'متأخر 19 د', sys: 'ساعات مرنة', req: '7 س', done: '6 س 17 د', left: '43 د', trips: 2, away: '17 د من رصيد 30 د' },
+  { d: 'الاثنين ٣ أغسطس', in: '08:55', out: '17:02', net: '8 س 7 د', brk: '22 / 30 د', kind: 'دوام', late: '', sys: 'دوام ثابت', req: '8 س', done: '8 س 07 د', left: '—', trips: 1, away: '8 د من رصيد 30 د' },
+  { d: 'الثلاثاء ٤ أغسطس', in: '—', out: '—', net: '—', brk: '—', kind: 'إجازة', late: '', sys: '—', req: '—', done: '—', left: '—', trips: 0, away: '—' },
+  { d: 'الأربعاء ٥ أغسطس', in: '09:02', out: '13:10', net: '4 س 8 د', brk: '10 / 30 د', kind: 'نصف يوم', late: '', sys: 'ساعات مرنة', req: '4 س', done: '4 س 08 د', left: '—', trips: 1, away: '10 د من رصيد 30 د' },
+]
 
 /* ---------- تقويم مصغّر لاختيار الفترة ---------- */
 function MiniCal({ y, m, from, to, onPick, onNav }: { y: number; m: number; from: string | null; to: string | null; onPick: (d: string) => void; onNav: (n: number) => void }) {
@@ -84,6 +102,9 @@ export default function Attendance() {
   const [act, setAct] = useState<{ row: Row; type: string; time: string; reason: string } | null>(null)
   const [aps, setAps] = useState<Ap[]>(AP0)
   const [exp, setExp] = useState(false)
+  const [empQ, setEmpQ] = useState('')
+  const [openEmp, setOpenEmp] = useState<string | null>('e1')
+  const [openDay, setOpenDay] = useState<string | null>(null)
   const expRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -94,6 +115,9 @@ export default function Attendance() {
 
   const label = range === 'فترة مخصصة' && custom ? custom : range
   const rows = useMemo(() => ROWS.filter(r => stFilter === 'الكل' || r.state === stFilter), [stFilter])
+  const empList = useMemo(() => EMPS.filter(e =>
+    (team === 'كل الفرق' || e.team === team) && (emp === 'كل الموظفين' || e.name === emp) &&
+    (!empQ || e.name.includes(empQ) || e.team.includes(empQ))), [team, emp, empQ])
   const pending = aps.filter(a => a.state === 'معلّق').length
 
   const pickDate = (v: string) => {
@@ -183,6 +207,83 @@ export default function Attendance() {
             <Stat icon={<I.Info size={18} />} n="3" unit="أيام" t="تحتاج مراجعة" />
             <Stat icon={<I.Clock size={18} />} n={String(pending)} unit="طلبات" t="بانتظار الموافقة" />
           </div>
+        </Panel>
+        <div style={{ height: 14 }} />
+
+        <Panel title="سجل الحضور" sub={`${team} — اضغط على أي موظف لعرض سجله التفصيلي.`} icon={<I.People size={16} />}
+          actions={<div className="field" style={{ width: 260, height: 36, margin: 0 }}>
+            <I.Search size={16} style={{ color: 'var(--text-3)' }} />
+            <input placeholder="ابحث باسم الموظف أو الفريق…" value={empQ} onChange={e => setEmpQ(e.target.value)} />
+          </div>}>
+          {empList.length ? <table className="tbl">
+            <thead><tr><th>الموظف</th><th>الفريق</th><th>الدوام المقرر</th><th>المطلوبة</th><th>المحتسبة</th><th>الإضافي</th><th>الراحة المستخدمة</th><th>المتبقي</th><th>الحالة</th><th /></tr></thead>
+            <tbody>
+              {empList.map((e, i) => <Fragment key={e.id}>
+                <tr className="row-in" style={{ animationDelay: `${i * 30}ms`, cursor: 'pointer' }} onClick={() => { setOpenEmp(o => o === e.id ? null : e.id); setOpenDay(null) }}>
+                  <td><div className="cell-user"><span className="avatar sm teal">{e.initial}</span><span><b>{e.name}</b><span dir="ltr">{e.title}</span></span></div></td>
+                  <td className="muted">{e.team}</td>
+                  <td dir="ltr" style={{ textAlign: 'right' }}>{e.shift}</td>
+                  <td>{e.req}</td>
+                  <td><b>{e.done}</b><div className="caption">{e.of}</div></td>
+                  <td className="muted">{e.extra}</td>
+                  <td>{e.brk}</td>
+                  <td>{e.left}</td>
+                  <td><span className={`pill ${e.state === 'مكتمل' ? 'green' : e.state === 'وقت إضافي' ? 'teal' : 'amber'}`}>{e.state}</span></td>
+                  <td><I.Chevron size={14} className={openEmp === e.id ? 'rot' : ''} /></td>
+                </tr>
+                {openEmp === e.id && <tr className="sub-row"><td colSpan={10}>
+                  <div className="emp-log">
+                    <div className="emp-log-head">
+                      <b>سجل {e.name} — ١ أغسطس — ٢٦ أغسطس 2026</b>
+                      <span className="caption">اضغط على أي يوم لعرض السجل الزمني، أو استخدم «إجراء» لتسجيل إجازة أو إذن أو تعديل يدوي للوقت.</span>
+                    </div>
+                    <table className="tbl">
+                      <thead><tr><th>اليوم</th><th>الحضور</th><th>الانصراف</th><th>المحتسب</th><th>الراحة</th><th>الحالة</th><th>إجراء</th></tr></thead>
+                      <tbody>
+                        {DROWS.filter(d => stFilter === 'الكل' || (stFilter === 'تأخير' ? !!d.late : stFilter === d.kind || (stFilter === 'مكتمل' && d.kind === 'دوام' && !d.late))).map(d => <Fragment key={d.d}>
+                          <tr style={{ cursor: 'pointer' }} onClick={() => setOpenDay(o => o === e.id + d.d ? null : e.id + d.d)}>
+                            <td><span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><I.Chevron size={13} className={openDay === e.id + d.d ? 'rot' : ''} />{d.d}</span></td>
+                            <td dir="ltr" style={{ textAlign: 'right' }}>{d.in}</td>
+                            <td dir="ltr" style={{ textAlign: 'right' }}>{d.out}</td>
+                            <td>{d.net}</td>
+                            <td className="muted" dir="ltr" style={{ textAlign: 'right' }}>{d.brk}</td>
+                            <td><span style={{ display: 'inline-flex', gap: 6 }}>
+                              <span className={`pill ${d.kind === 'إجازة' ? 'purple' : d.kind === 'نصف يوم' ? 'teal' : 'green'}`}>{d.kind}</span>
+                              {d.late && <span className="pill amber">{d.late}</span>}
+                            </span></td>
+                            <td onClick={ev => ev.stopPropagation()}><RowMenu items={[
+                              { label: 'تسجيل إجازة', onClick: () => setAct({ row: { ...ROWS[0], d: d.d, day: e.name }, type: 'إجازة يوم', time: '', reason: '' }) },
+                              { label: 'إذن تأخير', onClick: () => setAct({ row: { ...ROWS[0], d: d.d, day: e.name }, type: 'إذن تأخير', time: '٣٠ دقيقة', reason: '' }) },
+                              { label: 'تعديل يدوي للوقت', onClick: () => setAct({ row: { ...ROWS[0], d: d.d, day: e.name }, type: 'تعديل يدوي', time: d.in, reason: '' }) },
+                            ]} /></td>
+                          </tr>
+                          {openDay === e.id + d.d && <tr className="sub-row"><td colSpan={7}>
+                            <div className="day-detail">
+                              <div className="dd-head">
+                                <b>تفاصيل الحضور لليوم</b>
+                                <span className="pill teal" dir="ltr">{d.in} — {d.out}</span>
+                                <span style={{ flex: 1 }} />
+                                <span className="caption">وقت «بعيد» {d.away}</span>
+                                <span className="pill amber">خرج ورجع {ar(d.trips)} مرات</span>
+                              </div>
+                              <div className="grid g4" style={{ gap: 10 }}>
+                                {[['نظام الدوام', d.sys, ''], ['الساعات المطلوبة اليوم', d.req, ''], ['الساعات المحتسبة', d.done, ''], ['المتبقي', d.left, 'var(--amber)']].map(([k, v, c]) =>
+                                  <div className="dd-cell" key={k}><span className="caption">{k}</span><b style={c ? { color: c } : undefined}>{v}</b></div>)}
+                              </div>
+                            </div>
+                          </td></tr>}
+                        </Fragment>)}
+                      </tbody>
+                    </table>
+                  </div>
+                </td></tr>}
+              </Fragment>)}
+            </tbody>
+          </table> : <Empty title="لا يوجد موظف مطابق" sub={`لا نتائج لـ «${empQ}».`} action={<button className="btn btn-secondary btn-sm" onClick={() => setEmpQ('')}>مسح البحث</button>} />}
+        </Panel>
+
+        <div style={{ height: 14 }} />
+        <Panel title="سجلي" sub="أيام الدورة الحالية لحسابك" icon={<I.Clock size={16} />}>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
             {STATES.map(s => <button key={s} className={`chip ${stFilter === s ? 'on' : ''}`} onClick={() => setStFilter(s)}>{s}</button>)}
           </div>
