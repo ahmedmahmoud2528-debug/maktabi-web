@@ -152,7 +152,7 @@ export default function Floor() {
         <button className="ai-btn" title="المساعد الذكي" onClick={e => { e.stopPropagation(); setPop({ kind: 'ai' }) }}><I.Sparkle /></button>
         {pop?.kind === 'ai' && <AIPanel onClose={() => setPop(null)} />}
 
-        <ControlBar onLeave={() => nav('/workspaces')} inRoom={!!myRoom} />
+        <div className="ctrl-wrap" style={{ width: px(PLAN.w) }}><ControlBar onLeave={() => nav('/workspaces')} inRoom={!!myRoom} /></div>
       </div>
 
       {pop?.kind === 'assign' && <AssignOwnerDialog desk={pop.desk} onClose={() => setPop(null)} />}
