@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { Fragment, useEffect, useRef, useState, type ReactNode } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { I } from './Icons'
@@ -120,8 +120,11 @@ export function RowMenu({ items }: { items: { label: string; danger?: boolean; o
   return (
     <div className={`rowmenu ${open ? 'open' : ''}`} ref={ref}>
       <button className={`btn btn-ghost btn-icon ${open ? 'is-open' : ''}`} onClick={toggle} aria-label="إجراءات" aria-expanded={open}><I.More size={18} /></button>
-      {open && <div className="popover menu" style={{ [up ? 'bottom' : 'top']: 40, insetInlineEnd: 0, minWidth: 196 }}>
-        {items.map(it => <button key={it.label} className={`menu-item ${it.danger ? 'danger' : ''}`} onClick={() => { it.onClick(); setOpen(false) }}>{it.label}</button>)}
+      {open && <div className="popover menu" style={{ [up ? 'bottom' : 'top']: 38, insetInlineEnd: 0, minWidth: 196 }}>
+        {items.map((it, i) => <Fragment key={it.label}>
+          {it.danger && i > 0 && !items[i - 1].danger && <div className="menu-sep" />}
+          <button className={`menu-item ${it.danger ? 'danger' : ''}`} onClick={() => { it.onClick(); setOpen(false) }}>{it.label}</button>
+        </Fragment>)}
       </div>}
     </div>
   )

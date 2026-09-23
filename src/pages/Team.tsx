@@ -25,12 +25,53 @@ const ROLES = [
   { name: 'ضيف', n: 3, desc: 'وصول محدود لغرفة واحدة بدون صلاحيات إدارية' },
 ]
 
-const PERMS = [
-  { g: 'المكتب والطوابق', items: [['دخول المكتب', true, true], ['تعديل تصميم الطابق', false, true], ['إنشاء طابق جديد', false, true], ['تعيين مالك مكتب', false, true]] },
-  { g: 'الأعضاء والصلاحيات', items: [['دعوة أعضاء', false, true], ['تعديل أدوار الأعضاء', false, true], ['تعطيل عضو', false, true]] },
-  { g: 'الحضور والتقارير', items: [['عرض حضوري', true, true], ['عرض حضور الفريق', false, true], ['تصدير التقارير', false, true]] },
-  { g: 'الفوترة', items: [['عرض الفواتير', false, true], ['تغيير الباقة', false, true]] },
-] as const
+/* الصلاحيات: lvl = أقل دور يملكها افتراضيًا (0 = المالك فقط … 5 = الجميع) */
+const RANK: Record<string, number> = { 'المالك الأساسي': 0, 'المشرف': 1, 'مدير الشركة': 2, 'مدير طابق': 3, 'موظف': 4, 'ضيف': 5 }
+type P = { t: string; lvl: number; sub?: string }
+const PERMS: { g: string; items: P[] }[] = [
+  {
+    g: 'مساحة العمل', items: [
+      { t: 'دخول الطوابق', lvl: 5 },
+      { t: 'إدارة الغرف', lvl: 3 },
+      { t: 'تعديل غرفته فقط', lvl: 4, sub: 'يملك العضو الذي يكون مالكًا لمكتب تغيير الأثاث والاسم والأرضية دون أي غرفة أخرى.' },
+      { t: 'تعديل الخريطة', lvl: 3 },
+      { t: 'تخصيص المساحات', lvl: 1 },
+      { t: 'استخدام متجر الأثاث', lvl: 3 },
+    ],
+  },
+  {
+    g: 'الأعضاء', items: [
+      { t: 'عرض الأعضاء', lvl: 4 },
+      { t: 'دعوة عضو', lvl: 1 },
+      { t: 'تعديل بيانات الأعضاء', lvl: 1 },
+      { t: 'تعديل الأدوار', lvl: 1 },
+      { t: 'تعطيل عضو', lvl: 1 },
+    ],
+  },
+  {
+    g: 'الحضور والتقارير', items: [
+      { t: 'عرض حضوره', lvl: 5 },
+      { t: 'عرض حضور الفريق', lvl: 2 },
+      { t: 'تعديل سجل الحضور', lvl: 1 },
+      { t: 'تصدير التقارير', lvl: 2 },
+    ],
+  },
+  {
+    g: 'الاجتماعات والتسجيلات', items: [
+      { t: 'بدء اجتماع', lvl: 4 },
+      { t: 'تسجيل الاجتماعات', lvl: 4 },
+      { t: 'مشاركة الشاشة', lvl: 5 },
+      { t: 'إدارة وصول التسجيلات', lvl: 2 },
+    ],
+  },
+  {
+    g: 'الفوترة والاشتراك', items: [
+      { t: 'عرض الفواتير', lvl: 2 },
+      { t: 'تغيير الباقة', lvl: 0 },
+      { t: 'تحديث طريقة الدفع', lvl: 0 },
+    ],
+  },
+]
 
 const TEAMS = [
   { name: 'فريق التصميم', lead: 'داليا سمير', n: 4, tpl: 'إدارة فريق التصميم' },
@@ -124,6 +165,8 @@ function Members() {
 function Roles() {
   const { toast } = useStore()
   const [sel, setSel] = useState<string | null>(null)
+  const [q, setQ] = useState('')
+  const [pf, setPf] = useState('الكل')
   const [state, setState] = useState<Record<string, boolean>>({})
   const [dirty, setDirty] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -148,23 +191,57 @@ function Roles() {
   )
 
   const locked = sel === 'المالك الأساسي'
+  const rank = RANK[sel] ?? 4
+  const isOn = (g: string, p: P) => state[g + p.t] ?? (locked ? true : p.lvl >= rank)
+  const all = PERMS.flatMap(g => g.items.map(p => isOn(g.g, p)))
+  const onN = all.filter(Boolean).length
+  const groups = PERMS
+    .map(g => ({ g: g.g, items: g.items.filter(p => (!q || p.t.includes(q)) && (pf === 'الكل' || (pf === 'المفعّلة') === isOn(g.g, p))) }))
+    .filter(g => g.items.length)
   return (
     <>
-      <button className="back-link" onClick={() => { setSel(null); setDirty(false) }}><I.ChevronR size={14} />رجوع إلى الأدوار</button>
-      <PageHead title={`صلاحيات: ${sel}`} sub={locked ? 'هذا الدور محمي ولا يمكن تعديل صلاحياته' : 'فعّل أو عطّل الصلاحيات ثم احفظ التغييرات'} />
+      <PageHead title="الصلاحيات" sub="تحكّم في الصلاحيات الافتراضية لكل دور داخل مساحة العمل"
+        actions={<button className="btn btn-secondary btn-sm" onClick={() => { setSel(null); setDirty(false); setQ(''); setPf('الكل') }}><I.ChevronR size={14} />كل الأدوار</button>} />
+
+      <div className="card card-in" style={{ padding: 10, display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
+        <div className="field" style={{ flex: 1, minWidth: 200, height: 36, margin: 0 }}>
+          <I.Search size={16} style={{ color: 'var(--text-3)' }} />
+          <input placeholder="ابحث في الصلاحيات…" value={q} onChange={e => setQ(e.target.value)} />
+        </div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {['الكل', 'المفعّلة', 'غير المفعّلة'].map(f => <button key={f} className={`chip ${pf === f ? 'on' : ''}`} onClick={() => setPf(f)}>{f}</button>)}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+        {ROLES.map(r => <button key={r.name} className={`chip ${sel === r.name ? 'on' : ''}`} onClick={() => { setSel(r.name); setState({}); setDirty(false) }}>
+          {r.locked && <I.Status size={13} />}{r.name}
+        </button>)}
+      </div>
+
+      <Panel className="card-in">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ flex: 1 }}>
+            <h3 style={{ fontSize: 15, fontWeight: 700 }}>{sel}</h3>
+            <p className="caption" style={{ marginTop: 3 }}>{locked ? 'دور محمي — كل الصلاحيات مفعّلة دائمًا' : `${onN} صلاحية مفعّلة · ${all.length - onN} غير مفعّلة`}</p>
+          </div>
+          <span className="pill"><I.People size={13} />{ROLES.find(r => r.name === sel)?.n} عضوًا يستخدمون هذا الدور</span>
+        </div>
+      </Panel>
+      <div style={{ height: 14 }} />
+
       <div className="grid" style={{ gap: 14 }}>
-        {PERMS.map(g => (
-          <Panel key={g.g} title={g.g} icon={<I.Status size={16} />}>
-            {g.items.map(([label, emp]) => {
-              const key = g.g + label
-              const on = state[key] ?? (locked ? true : (emp as boolean))
-              return <PrefRow key={label as string} title={label as string} sub={locked ? 'مفعّل دائمًا لهذا الدور' : undefined}>
+        {groups.map(g => (
+          <Panel key={g.g} title={g.g}>
+            {g.items.map(p => (
+              <PrefRow key={p.t} title={p.t} sub={p.sub ?? (locked ? 'مفعّل دائمًا لهذا الدور' : undefined)}>
                 {locked ? <span className="pill teal"><I.Check size={12} />مفعّل</span>
-                  : <Switch on={on} onChange={v => { setState(s => ({ ...s, [key]: v })); setDirty(true) }} />}
+                  : <Switch on={isOn(g.g, p)} onChange={v => { setState(s => ({ ...s, [g.g + p.t]: v })); setDirty(true) }} />}
               </PrefRow>
-            })}
+            ))}
           </Panel>
         ))}
+        {!groups.length && <Empty title="لا توجد صلاحيات مطابقة" sub="جرّب كلمة أخرى أو غيّر الفلتر." />}
       </div>
       {dirty && !locked && (
         <div className="savebar">

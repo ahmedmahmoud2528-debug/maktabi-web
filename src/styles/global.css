@@ -125,11 +125,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 .modal-footer { display: flex; gap: 8px; margin-top: 14px; }
 
 .popover { position: absolute; background: var(--card); border-radius: 14px; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 30; }
-.menu { padding: 6px; min-width: 210px; }
-.menu-item { display: flex; align-items: center; gap: 10px; width: 100%; height: 40px; padding: 0 12px; border-radius: 10px; font-size: 13.5px; text-align: start; }
-.menu-item:hover { background: var(--slate-100); }
+.menu { padding: 5px; min-width: 196px; border-radius: 12px; }
+.menu-sep { height: 1px; background: var(--border); margin: 5px 6px; }
+.menu-item { display: flex; align-items: center; gap: 9px; width: 100%; height: 34px; padding: 0 10px; border-radius: 8px; font-size: 12.5px; color: var(--text); text-align: start; transition: background var(--t) var(--ease), color var(--t) var(--ease); }
+.menu-item:hover { background: var(--teal-50); color: var(--teal-pressed); }
 .menu-item svg { color: var(--text-2); }
 .menu-item.danger { color: var(--red); }
+.menu-item.danger:hover { background: #fef2f2; color: #b91c1c; }
 
 .toast-wrap { position: fixed; top: 24px; inset-inline: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 60; pointer-events: none; }
 .toast { pointer-events: auto; display: flex; align-items: center; gap: 12px; min-width: 360px; max-width: 480px; padding: 14px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); animation: toast-in .2s ease-out; }
