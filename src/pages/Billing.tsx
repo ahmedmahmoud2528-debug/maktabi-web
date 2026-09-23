@@ -37,18 +37,23 @@ export default function Billing() {
           <Panel title="الباقة الحالية" icon={<I.Card size={16} />} className="plan-now" actions={<span className="pill green">نشط</span>}>
             <h2 style={{ fontSize: 22, fontWeight: 700 }}>الفريق</h2>
             <p className="caption" style={{ marginTop: 2 }}>540 ر.س / شهريًا · 12 عضو</p>
-            <div className="card" style={{ padding: '0 14px', marginTop: 14 }}>
-              <div className="detail-row"><span>التجديد القادم</span><b>15 أكتوبر 2026</b></div>
-              <div className="detail-row"><span>التجديد التلقائي</span><b className="pill green">مفعّل</b></div>
-              <div className="detail-row"><span>دورة الفوترة</span><b>شهري</b></div>
-              <div className="detail-row"><span>قيمة التجديد</span><b>540 ر.س</b></div>
+            <div className="card bill-renew" style={{ marginTop: 14 }}>
+              <span className="ic"><I.Calendar size={16} /></span>
+              <span className="lb">التجديد القادم</span>
+              <b>15 أكتوبر 2026</b>
+            </div>
+            <div className="card bill-grid" style={{ marginTop: 10 }}>
+              <div><span>التجديد التلقائي</span><b className="teal">مفعّل</b></div>
+              <div><span>دورة الفوترة</span><b>شهري</b></div>
+              <div><span>قيمة التجديد</span><b>540 ر.س</b></div>
+              <div><span>طريقة الدفع</span><b dir="ltr">Visa •••• 4242</b></div>
             </div>
             <button className="btn btn-primary btn-sm btn-left" style={{ marginTop: 14 }} onClick={() => setTab(TABS[1])}><I.ChevronR size={15} />إدارة الباقة</button>
           </Panel>
           <Panel title="طريقة الدفع" icon={<I.Card size={16} />}>
             <div className="card" style={{ padding: 14, display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span className="pill">VISA</span>
-              <div style={{ flex: 1 }}><b dir="ltr">•••• 4242</b><div className="caption">تنتهي في 08/28</div></div>
+              <div style={{ flex: 1, textAlign: 'start' }}><b dir="ltr" style={{ display: 'block', textAlign: 'start' }}>•••• 4242</b><div className="caption">تنتهي في 08/28</div></div>
+              <span className="card-brand">VISA</span>
               <span className="pill teal">أساسية</span>
             </div>
             <button className="btn btn-secondary btn-sm btn-left" style={{ marginTop: 14 }} onClick={() => setTab(TABS[2])}>إدارة طرق الدفع</button>
@@ -70,17 +75,17 @@ export default function Billing() {
         <div style={{ height: 14 }} />
         <div className="grid g2">
           <Panel title="آخر فاتورة" icon={<I.Card size={16} />}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ flex: 1 }}><b dir="ltr">{INVOICES[0].id}</b><div className="caption">{INVOICES[0].date} · {INVOICES[0].amount}</div></div>
+            <div className="card" style={{ padding: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{ flex: 1 }}><b dir="ltr" style={{ display: 'block', textAlign: 'start' }}>{INVOICES[0].id}</b><div className="caption">{INVOICES[0].date} · {INVOICES[0].amount}</div></div>
               <span className="pill green">مدفوعة</span>
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 14, justifyContent: 'flex-end' }}>
               <button className="btn btn-secondary btn-sm" onClick={() => setInvoice(INVOICES[0])}>عرض التفاصيل</button>
-              <button className="btn btn-ghost btn-sm" onClick={() => toast('تم تحميل الفاتورة', INVOICES[0].id)}>تحميل PDF</button>
+              <button className="btn btn-secondary btn-sm" onClick={() => toast('تم تحميل الفاتورة', INVOICES[0].id)}><I.Card size={15} />تحميل PDF</button>
             </div>
           </Panel>
           <Panel title="بيانات الفوترة" icon={<I.Building size={16} />}>
-            <div className="card" style={{ padding: 14 }}><b>شركة قمرة السعادة لتقنية المعلومات</b><div className="caption" style={{ marginTop: 4 }}>الرياض · السعودية · الرقم الضريبي 3100•••••</div></div>
+            <div className="card" style={{ padding: 14 }}><b>شركة قمرة السعادة لتقنية المعلومات</b><div className="caption" style={{ marginTop: 4 }}>الرياض · السعودية</div></div>
             <button className="btn btn-secondary btn-sm btn-left" style={{ marginTop: 14 }} onClick={() => setTab(TABS[4])}>تعديل بيانات الفوترة</button>
           </Panel>
         </div>

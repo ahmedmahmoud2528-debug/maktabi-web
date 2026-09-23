@@ -219,3 +219,17 @@ svg.rot { transform: rotate(180deg); transition: transform var(--t) var(--ease);
 .dd-sess .rng { font-size: 11.5px; color: #94a3b8; }
 .dd-sess b { margin-inline-start: auto; font-size: 13px; color: #0f172a; }
 .dd-note { font-size: 11.5px; color: var(--teal); line-height: 1.7; }
+
+/* ===== الفوترة: مطابقة Billing Overview في فيجما ===== */
+.bill-renew { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
+.bill-renew .ic { width: 28px; height: 28px; border-radius: 8px; background: var(--slate-100); color: var(--text-2); display: grid; place-items: center; flex: 0 0 auto; }
+.bill-renew .lb { font-size: 12px; color: var(--text-2); }
+.bill-renew b { margin-inline-start: auto; font-size: 13.5px; }
+.bill-grid { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+.bill-grid > div { padding: 12px 14px; }
+.bill-grid > div:nth-child(odd) { border-inline-start: 1px solid var(--border); }
+.bill-grid > div:nth-child(n+3) { border-top: 1px solid var(--border); }
+.bill-grid span { display: block; font-size: 11.5px; color: var(--text-2); margin-bottom: 4px; }
+.bill-grid b { font-size: 13.5px; }
+.bill-grid b.teal { color: var(--teal); }
+.card-brand { display: inline-grid; place-items: center; width: 44px; height: 28px; border-radius: 6px; background: #fff; border: 1px solid var(--border); font-size: 10px; font-weight: 800; letter-spacing: .5px; color: var(--text); flex: 0 0 auto; }
