@@ -9,6 +9,7 @@ if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
 Copy-Item "dist" $tmp -Recurse
 Set-Location $tmp
 git init -q -b gh-pages
+git config core.autocrlf false
 git add -A
 git -c user.name="Maktabi Design" -c user.email="bd@koumra.com.sa" commit -q -m "publish"
 $env:GIT_TERMINAL_PROMPT = "0"

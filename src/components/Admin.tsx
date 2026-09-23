@@ -29,7 +29,6 @@ export function AdminLayout({ children }: { children: ReactNode }) {
         <div className="divider-dark" />
         <div className="sec">الإدارة</div>
         <div className="nav-group">
-          <NavLink to="/admin/workspace" className={link}>إدارة المساحة<I.Status size={20} /></NavLink>
           <NavLink to="/admin/attendance" className={link}>الحضور والانصراف<I.Calendar size={20} /></NavLink>
           <NavLink to="/admin/billing" className={link}>الفوترة والاشتراك<I.Card size={20} /></NavLink>
           <NavLink to="/admin/settings" className={link}>الإعدادات<I.Settings size={20} /></NavLink>
