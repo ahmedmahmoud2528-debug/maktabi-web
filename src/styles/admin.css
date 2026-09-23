@@ -62,7 +62,7 @@
 .admin-nav .logout:hover { background: rgba(255,255,255,.05); color: #fff; }
 
 /* ============ واجهة الإدارة ============ */
-.admin { display: grid; grid-template-columns: 1fr 264px; height: 100vh; background: var(--page); }
+.admin { display: grid; grid-template-columns: 264px 1fr; height: 100vh; background: var(--page); }
 .admin-main { overflow: auto; height: 100vh; }
 .admin-inner { padding: 22px 24px 60px; max-width: 1180px; }
 .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
@@ -145,3 +145,7 @@ table.tbl tbody tr:hover { background: #fbfdff; }
 .rowmenu .popover { z-index: 60; }
 .btn-ghost.is-open { background: var(--slate-100); color: var(--text); }
 .admin-nav .foot-sep { margin-top: auto; }
+
+/* السايد بار على اليمين (RTL): العمود الأول = يمين الشاشة */
+.admin-nav { grid-column: 1; grid-row: 1; }
+.admin-main { grid-column: 2; grid-row: 1; }
