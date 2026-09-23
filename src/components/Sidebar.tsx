@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CHANNELS, EMOJIS, GROUPS, PEOPLE, type Person } from '../data'
 import { useStore } from '../store'
@@ -6,10 +6,30 @@ import { I } from './Icons'
 
 const PRESENCE: Record<Person['presence'], [string, string]> = { available: ['متاح', 'green'], focus: ['تركيز', 'purple'], away: ['بعيد', 'amber'], offline: ['غير متصل', 'gray'] }
 
+/* التطبيقات والإدارة — نفس شبكة فيجما */
+const APPS: [string, JSX.Element, string][] = [
+  ['حضوري', <I.Clock size={18} />, '/admin/attendance'],
+  ['الفريق', <I.People size={18} />, '/admin/members'],
+  ['الحضور والتقارير', <I.Calendar size={18} />, '/admin/attendance'],
+  ['التسجيلات', <I.Cam size={18} />, '/admin/recordings'],
+  ['مساحات العمل', <I.Building size={18} />, '/workspaces'],
+  ['إدارة المساحة', <I.Status size={18} />, '/admin/workspace'],
+  ['الإعدادات', <I.Settings size={18} />, '/admin/settings'],
+]
+
 export function Sidebar({ onLocate }: { onLocate: (p: Person) => void }) {
   const { dm, openDM, setInvite, user, toast } = useStore()
   const nav = useNavigate()
   const [q, setQ] = useState('')
+  const [apps, setApps] = useState(false)
+  const appsRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!apps) return
+    const h = (e: MouseEvent) => { if (appsRef.current && !appsRef.current.contains(e.target as Node)) setApps(false) }
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setApps(false) }
+    document.addEventListener('mousedown', h); document.addEventListener('keydown', esc)
+    return () => { document.removeEventListener('mousedown', h); document.removeEventListener('keydown', esc) }
+  }, [apps])
   const person = dm ? PEOPLE.find(p => p.id === dm) : null
   if (person) return <DM person={person} onBack={() => openDM(null)} onLocate={onLocate} />
 
@@ -22,9 +42,22 @@ export function Sidebar({ onLocate }: { onLocate: (p: Person) => void }) {
         <div className="sb-ws"><span className="tile"><I.Building size={14} /></span>قمرة السعادة</div>
         <div className="sb-floor"><I.Layers size={13} /> الطابق الأول · فريق التصميم</div>
       </div>
-      <div className="sb-invite">
+      <div className="sb-invite" ref={appsRef}>
         <button className="btn btn-primary btn-fill" onClick={() => setInvite(true)}>دعوة عضو</button>
-        <button className="apps" title="التطبيقات" onClick={() => nav('/admin/members')}><I.Apps size={20} /></button>
+        <button className={`apps ${apps ? 'on' : ''}`} title="التطبيقات والإدارة" onClick={() => setApps(o => !o)}><I.Apps size={20} /></button>
+        {apps && (
+          <div className="popover apps-pop">
+            <div className="caption apps-head">التطبيقات والإدارة</div>
+            <div className="apps-grid">
+              {APPS.map(([label, icon, to]) => (
+                <button key={label as string} className="app-tile" onClick={() => { setApps(false); nav(to as string) }}>
+                  <span className="ic">{icon}</span>
+                  <span className="t">{label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <div className="sb-search"><div className="field"><I.Search className="icon-sm" style={{ color: 'var(--text-3)' }} /><input placeholder="ابحث عن شخص أو مكان" value={q} onChange={e => setQ(e.target.value)} /></div></div>
       <div className="sb-body">
