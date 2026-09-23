@@ -51,12 +51,11 @@ export default function Floor() {
     return Math.hypot(p.x! - me.x, p.y! - me.y) < AUDIO_R
   }
 
-  const walkTo = (x: number, y: number, label?: string) => {
+  /* التنقّل بدون إشعار — الحركة نفسها هي التغذية الراجعة */
+  const walkTo = (x: number, y: number, _label?: string) => {
     const nx = Math.max(16, Math.min(PLAN.w - 62, x)), ny = Math.max(16, Math.min(PLAN.h - 66, y))
     setWalking(true); setMe({ x: nx, y: ny }); setPop(null)
     window.setTimeout(() => setWalking(false), 640)
-    const r = roomAt(nx + 23, ny + 25)
-    if (label) s.toast('تم الانتقال إلى ' + label, r ? `أنت الآن داخل ${r.name} — تسمع من في الغرفة فقط.` : 'أنت الآن في المساحة المفتوحة.')
   }
   const onPlanDouble = (e: React.MouseEvent) => {
     const box = planRef.current!.getBoundingClientRect()
@@ -155,7 +154,7 @@ export default function Floor() {
       </div>
 
       {pop?.kind === 'assign' && <AssignOwnerDialog desk={pop.desk} onClose={() => setPop(null)} />}
-      {knock && <KnockToast room={knock} onClose={() => setKnock(null)} onEnter={() => { walkTo(knock.x + knock.w / 2 - 23, knock.y + knock.h / 2 - 25, knock.name); setKnock(null) }} />}
+      {knock && <KnockToast room={knock} onClose={() => setKnock(null)} />}
     </div>
   )
 }
@@ -250,16 +249,13 @@ function AIPanel({ onClose }: { onClose: () => void }) {
   )
 }
 
-function KnockToast({ room, onClose, onEnter }: { room: Room; onClose: () => void; onEnter: () => void }) {
-  const { openDM } = useStore()
-  useEffect(() => { const t = window.setTimeout(onClose, 9000); return () => window.clearTimeout(t) }, [onClose])
+/* تنبيه خفيف أسفل اليمين: مجرد إشارة إنك طرقت، بدون أزرار */
+function KnockToast({ room, onClose }: { room: Room; onClose: () => void }) {
+  useEffect(() => { const t = window.setTimeout(onClose, 2600); return () => window.clearTimeout(t) }, [onClose])
   return (
-    <div className="knock card-in">
-      <span className="tile"><I.Door size={20} /></span>
-      <div style={{ flex: 1 }}><b style={{ fontSize: 13.5 }}>طرقت على باب {room.name}</b><div className="caption">بانتظار رد ممن في الغرفة…</div></div>
-      <button className="btn btn-primary btn-sm" onClick={onEnter}>ادخل الغرفة</button>
-      <button className="btn btn-secondary btn-sm" onClick={() => { openDM('mohamed'); onClose() }}>رد برسالة</button>
-      <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose}><I.Close size={16} /></button>
+    <div className="knock">
+      <span className="k-ic"><I.Door size={14} /></span>
+      طرقت على باب {room.name}
     </div>
   )
 }
