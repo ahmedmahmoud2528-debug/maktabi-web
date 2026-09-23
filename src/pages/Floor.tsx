@@ -95,7 +95,7 @@ export default function Floor() {
             ))}
 
             {ROOMS.filter(r => r.name !== 'المطبخ').map(r => (
-              <button key={'k' + r.name} className="door" title={`اطرق باب ${r.name}`} style={{ left: px(r.x + r.w / 2 - 13), top: px(r.y + r.h - 7) }}
+              <button key={'k' + r.name} className="door" title={`اطرق باب ${r.name}`} style={{ left: px(r.x + r.w / 2) - 11, top: px(r.y + r.h) - 11 }}
                 onClick={e => { e.stopPropagation(); setKnock(r) }}><I.Door size={13} /></button>
             ))}
 
