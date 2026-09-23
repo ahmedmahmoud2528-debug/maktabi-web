@@ -46,6 +46,28 @@ export default function Editor() {
   const px = (v: number) => v * fit
   const item = items.find(i => i.id === sel)
 
+  /* سحب العناصر داخل المخطط */
+  const planRef = useRef<HTMLDivElement>(null)
+  const [drag, setDrag] = useState<{ id: string; ox: number; oy: number } | null>(null)
+  const onItemDown = (e: React.PointerEvent, it: Item) => {
+    setSel(it.id)
+    if (it.locked || !planRef.current) return
+    const b = planRef.current.getBoundingClientRect()
+    setDrag({ id: it.id, ox: (e.clientX - b.left) / fit - it.x, oy: (e.clientY - b.top) / fit - it.y })
+      ; (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId)
+  }
+  const onPlanMove = (e: React.PointerEvent) => {
+    if (!drag || !planRef.current) return
+    const b = planRef.current.getBoundingClientRect()
+    setItems(l => l.map(i => {
+      if (i.id !== drag.id) return i
+      const nx = Math.max(0, Math.min(PLAN.w - i.w, Math.round((e.clientX - b.left) / fit - drag.ox)))
+      const ny = Math.max(0, Math.min(PLAN.h - i.h, Math.round((e.clientY - b.top) / fit - drag.oy)))
+      return { ...i, x: nx, y: ny }
+    }))
+  }
+  const endDrag = () => { if (drag) { setDrag(null); setDirty(true) } }
+
   const update = (id: string, patch: Partial<Item>) => { setItems(list => list.map(i => i.id === id ? { ...i, ...patch } : i)); setDirty(true) }
   const add = (s: typeof STORE[0]) => {
     const id = 'n' + Date.now()
@@ -113,13 +135,19 @@ export default function Editor() {
         </div>
 
         <div className="floor-canvas" style={{ paddingTop: 110 }}>
-          <div className="plan" style={{ width: px(PLAN.w), height: px(PLAN.h) }} onClick={e => e.stopPropagation()}>
+          <div ref={planRef} className="plan" style={{ width: px(PLAN.w), height: px(PLAN.h) }} onClick={e => e.stopPropagation()}
+            onPointerMove={onPlanMove} onPointerUp={endDrag} onPointerLeave={endDrag}>
             <img src="./assets/floor@2x.jpg" alt="مخطط الطابق" draggable={false} />
             <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(20,184,166,.10) 1px, transparent 1px), linear-gradient(90deg, rgba(20,184,166,.10) 1px, transparent 1px)', backgroundSize: `${px(38)}px ${px(38)}px` }} />
             {items.map(it => (
               <div key={it.id} className={`hot ${sel === it.id ? 'selected' : ''}`} title={it.label}
-                style={{ left: px(it.x), top: px(it.y), width: px(it.w), height: px(it.h), transform: `rotate(${it.rot}deg)`, transition: 'transform 180ms var(--ease), left 180ms var(--ease), top 180ms var(--ease), width 180ms var(--ease), height 180ms var(--ease)', background: it.added ? 'rgba(20,184,166,.22)' : undefined, border: it.added ? '1px dashed var(--teal)' : undefined, borderRadius: 8 }}
-                onClick={() => setSel(it.id)} />
+                style={{
+                  left: px(it.x), top: px(it.y), width: px(it.w), height: px(it.h), transform: `rotate(${it.rot}deg)`,
+                  transition: drag?.id === it.id ? 'none' : 'transform 180ms var(--ease), left 180ms var(--ease), top 180ms var(--ease), width 180ms var(--ease), height 180ms var(--ease)',
+                  background: it.added ? 'rgba(20,184,166,.22)' : undefined, border: it.added ? '1px dashed var(--teal)' : undefined, borderRadius: 8,
+                  cursor: it.locked ? 'not-allowed' : drag?.id === it.id ? 'grabbing' : 'grab', touchAction: 'none',
+                }}
+                onPointerDown={e => onItemDown(e, it)} onClick={() => setSel(it.id)} />
             ))}
             {item && (
               <div className="popover" style={{ left: Math.max(0, Math.min(px(item.x + item.w / 2) - 160, px(PLAN.w) - 320)), top: px(item.y + item.h) + 10, padding: 6, display: 'flex', alignItems: 'center', gap: 4 }} onClick={e => e.stopPropagation()}>

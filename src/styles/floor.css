@@ -105,3 +105,29 @@
 /* الباب: منطقة نقر شفافة فوق الباب المرسوم في المخطط — بدون أي شكل مضاف */
 .door-hit { position: absolute; background: none; border: 0; padding: 0; cursor: pointer; z-index: 5; border-radius: 8px; }
 .door-hit:hover { background: rgba(20,184,166,.16); }
+
+/* تنبيه الطرق: شريحة صغيرة أسفل يمين المخطط */
+.knock {
+  position: absolute; right: 20px; bottom: 104px; left: auto; top: auto; transform: none;
+  width: auto; max-width: none; display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 12px; border-radius: 999px; font-size: 12px; color: var(--text-2);
+  background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+  z-index: 20; animation: knock-in 180ms var(--ease) both;
+}
+.knock .k-ic { color: var(--teal); display: grid; place-items: center; }
+@keyframes knock-in { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
+
+/* ===== شريط التحكم: مطابق لـ Meeting Control Bar في فيجما ===== */
+.ctrl .ic { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; }
+.ctrl.off .ic { background: #fef2f2; }
+.ctrl-av { position: relative; width: 20px; height: 20px; margin: 6px; border-radius: 50%; background: var(--teal); color: #fff; font-size: 9px; font-weight: 700; display: grid; place-items: center; }
+.ctrl-av i { position: absolute; left: -2px; bottom: -1px; width: 7px; height: 7px; border-radius: 50%; background: #33c759; border: 1.5px solid #fff; }
+.ctrl-sep { width: 1px; height: 40px; background: var(--border); flex: 0 0 auto; }
+
+/* زر المساعد الذكي: الأصل المصدَّر من فيجما */
+.ai-btn { background: none; border: 0; box-shadow: none; padding: 0; width: 63px; height: 63px; }
+.ai-btn img { display: block; width: 63px; height: 63px; }
+
+/* حقل الكتابة في لوحة المساعد: حالة نشطة واضحة */
+.ai-panel .composer .pill { transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease), background var(--t) var(--ease); }
+.ai-panel .composer .pill:focus-within { background: var(--card); border-color: var(--teal); box-shadow: 0 0 0 3px rgba(20,184,166,.18); }

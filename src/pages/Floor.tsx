@@ -149,7 +149,7 @@ export default function Floor() {
           {pop?.kind === 'floors' && <FloorSwitcher current={s.floor} onPick={id => { s.setFloor(id); setPop(null) }} />}
         </div>
 
-        <button className="ai-btn" title="المساعد الذكي" onClick={e => { e.stopPropagation(); setPop({ kind: 'ai' }) }}><I.Sparkle /></button>
+        <button className="ai-btn" title="المساعد الذكي" onClick={e => { e.stopPropagation(); setPop({ kind: "ai" }) }}><img src="./assets/ai.svg" alt="" width={63} height={63} /></button>
         {pop?.kind === 'ai' && <AIPanel onClose={() => setPop(null)} />}
 
         <div className="ctrl-wrap"><ControlBar onLeave={() => nav('/workspaces')} inRoom={!!myRoom} /></div>
@@ -268,21 +268,28 @@ function ControlBar({ onLeave, inRoom }: { onLeave: () => void; inRoom: boolean 
   const [showStatus, setShowStatus] = useState(false)
   return (
     <div className="ctrl-bar" onClick={e => e.stopPropagation()}>
-      <button className={`ctrl ${s.mic ? 'on' : 'off'}`} onClick={() => s.toggle('mic')}>{s.mic ? <I.Mic /> : <I.MicOff />}الميكروفون</button>
-      <button className={`ctrl ${s.cam ? 'on' : 'off'}`} onClick={() => s.toggle('cam')}>{s.cam ? <I.Cam /> : <I.CamOff />}الكاميرا</button>
+      <button className={`ctrl ${s.mic ? 'on' : 'off'}`} onClick={() => s.toggle('mic')}><span className="ic">{s.mic ? <I.Mic size={24} /> : <I.MicOff size={24} />}</span>الميكروفون</button>
       <span className="ctrl-sep" />
-      <button className={`ctrl ${s.sharing ? 'on' : ''}`} onClick={() => { s.toggle('sharing'); s.toast(s.sharing ? 'تم إيقاف مشاركة الشاشة' : 'بدأت مشاركة الشاشة', inRoom ? 'يراها من في الغرفة فقط.' : 'يراها من في نطاق صوتك.') }}><I.Screen />مشاركة الشاشة</button>
-      <button className={`ctrl ${s.recording ? 'off' : ''}`} onClick={() => { s.toggle('recording'); s.toast(s.recording ? 'تم إيقاف التسجيل' : 'بدأ التسجيل', s.recording ? undefined : 'سيُحفظ في مكتبة التسجيلات.') }}><I.Record />التسجيل</button>
+      <button className={`ctrl ${s.cam ? 'on' : 'off'}`} onClick={() => s.toggle('cam')}><span className="ic">{s.cam ? <I.Cam size={24} /> : <I.CamOff size={24} />}</span>الكاميرا</button>
+      <span className="ctrl-sep" />
+      <button className={`ctrl ${s.sharing ? 'on' : ''}`} onClick={() => { s.toggle('sharing'); s.toast(s.sharing ? 'تم إيقاف مشاركة الشاشة' : 'بدأت مشاركة الشاشة', inRoom ? 'يراها من في الغرفة فقط.' : 'يراها من في نطاق صوتك.') }}><span className="ic"><I.Share size={24} /></span>مشاركة الشاشة</button>
+      <span className="ctrl-sep" />
+      <button className={`ctrl ${s.recording ? 'off' : ''}`} onClick={() => { s.toggle('recording'); s.toast(s.recording ? 'تم إيقاف التسجيل' : 'بدأ التسجيل', s.recording ? undefined : 'سيُحفظ في مكتبة التسجيلات.') }}><span className="ic"><I.Record size={24} /></span>التسجيل</button>
+      <span className="ctrl-sep" />
       <div style={{ position: 'relative' }}>
-        <button className="ctrl" onClick={() => setShowStatus(v => !v)}><I.Status />الحالة</button>
+        <button className="ctrl" onClick={() => setShowStatus(v => !v)}>
+          <span className="ctrl-av">{s.user.initial}<i /></span>الحالة
+        </button>
         {showStatus && <div className="popover menu" style={{ bottom: 64, left: '50%', transform: 'translateX(-50%)' }}>
           {['متاح', 'تركيز', 'بعيد', 'لا تزعجني'].map(x => <button key={x} className="menu-item" onClick={() => { setShowStatus(false); s.toast('تم تحديث حالتك', x) }}><i className={`dot ${x === 'متاح' ? 'green' : x === 'تركيز' ? 'purple' : x === 'بعيد' ? 'amber' : 'gray'}`} />{x}</button>)}
         </div>}
       </div>
-      <button className="ctrl" onClick={() => s.toast('الغرف', ROOMS.map(r => r.name).join(' · '))}><I.Rooms />الغرف</button>
-      <button className="ctrl" onClick={() => s.toast('نافذة مستقلة', 'فتح المكتب في نافذة صغيرة فوق باقي التطبيقات.')}><I.Popout />نافذة مستقلة</button>
       <span className="ctrl-sep" />
-      <button className="ctrl leave" onClick={onLeave}><I.Leave />مغادرة</button>
+      <button className="ctrl" onClick={() => s.toast('الغرف', ROOMS.map(r => r.name).join(' · '))}><span className="ic"><I.Grid size={24} /></span>الغرف</button>
+      <span className="ctrl-sep" />
+      <button className="ctrl" onClick={() => s.toast('نافذة مستقلة', 'فتح المكتب في نافذة صغيرة فوق باقي التطبيقات.')}><span className="ic"><I.Screen size={24} /></span>نافذة مستقلة</button>
+      <span className="ctrl-sep" />
+      <button className="ctrl leave" onClick={onLeave}><span className="ic"><I.CallSlash size={24} /></span>مغادرة</button>
     </div>
   )
 }
