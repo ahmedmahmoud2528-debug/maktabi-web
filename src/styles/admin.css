@@ -149,3 +149,17 @@ table.tbl tbody tr:hover { background: #fbfdff; }
 /* السايد بار على اليمين (RTL): العمود الأول = يمين الشاشة */
 .admin-nav { grid-column: 1; grid-row: 1; }
 .admin-main { grid-column: 2; grid-row: 1; }
+
+/* ===== تقويم الفترة المخصصة + سجل اليوم ===== */
+.cal { border: 1px solid var(--border); border-radius: 14px; padding: 10px; }
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 13.5px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-wd { font-size: 10.5px; color: var(--text-3); text-align: center; padding-bottom: 4px; }
+.cal-day { height: 34px; border-radius: 8px; font-size: 12.5px; color: var(--text); transition: background var(--t) var(--ease), color var(--t) var(--ease); }
+.cal-day:hover { background: var(--slate-100); }
+.cal-day.in { background: var(--teal-50); color: var(--teal-pressed); border-radius: 0; }
+.cal-day.on { background: var(--teal); color: #fff; font-weight: 700; }
+.log-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 12.5px; border-bottom: 1px solid var(--border); }
+.log-row:last-child { border-bottom: 0; }
+.log-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); flex: 0 0 auto; }
+.log-row b { min-width: 46px; }
