@@ -269,8 +269,6 @@ function ControlBar({ onLeave, inRoom }: { onLeave: () => void; inRoom: boolean 
   const s = useStore()
   const [showStatus, setShowStatus] = useState(false)
   return (
-    {/* RTL: أول عنصر = أقصى اليمين. الترتيب البصري زي فيجما:
-        مغادرة | نافذة مستقلة · الغرف · الحالة · التسجيل · مشاركة الشاشة | الكاميرا · الميكروفون */}
     <div className="ctrl-bar" onClick={e => e.stopPropagation()}>
       <button className={`ctrl ${s.mic ? 'on' : 'off'}`} onClick={() => s.toggle('mic')}>{s.mic ? <I.Mic /> : <I.MicOff />}الميكروفون</button>
       <button className={`ctrl ${s.cam ? 'on' : 'off'}`} onClick={() => s.toggle('cam')}>{s.cam ? <I.Cam /> : <I.CamOff />}الكاميرا</button>
